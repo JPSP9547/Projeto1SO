@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function copyFile(){
+    #Author: Joao Pereira
     #function has 2 arguments
     #argument1 : absolute path of file to be copied
     #argument2 : absolute path of directory where file will be copied
@@ -11,9 +12,10 @@ function copyFile(){
         local file=$1
         local destination=$2
 
-        cp -a $file $destination
+        cp -a $file "$destination"
     
         if [[ $? -eq 0 ]]; then
+            
             echo "cp -a $file $destination"
 
             echo "" #prints new line
@@ -28,7 +30,7 @@ function copyFile(){
     elif [[ $# == 3 && $1 == "-c" ]]; then
         local file=$2
         local destination=$3
-
+        
         echo "cp -a $file $destination"
         echo ""
 
