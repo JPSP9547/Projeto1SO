@@ -1,21 +1,40 @@
 #!/bin/bash
 
 function copyFile(){
-    #a funcao tem dois argumentos
-    #argumento1 : localizacao absoluta do ficheiro a copiar
-    #argumento2 : localizacao absoluta da diretoria para onde o ficheiro vai
+    #function has 2 arguments
+    #argument1 : absolute path of file to be copied
+    #argument2 : absolute path of directory where file will be copied
+    #function has a paremeter -c that makes it show the copy command but not execute it
+    #use copyFile [-c] file destination
 
-    file=$1
-    destination=$2
+    if [[ $# == 2 ]]; then
+        local file=$1
+        local destination=$2
 
-    cp $file $destination
+        cp -a $file $destination
     
-    if [[ $? -eq 0 ]]; then
-        echo "cp $file $destination\n"
-        return 0
-    else
-        echo "Error while copying\n"
-        return 1
-    fi
+        if [[ $? -eq 0 ]]; then
+            echo "cp -a $file $destination"
+
+            echo "" #prints new line
+            return 0
+        else
+            echo "Error while copying"
         
+            echo "" #prints new line
+            return 1
+        fi
+
+    elif [[ $# == 3 && $1 == "-c" ]]; then
+        local file=$2
+        local destination=$3
+
+        echo "cp -a $file $destination"
+        echo ""
+
+        return 0
+
+    else
+        echo "Wrong use of parameters and/or arguments"
+    fi
 }
