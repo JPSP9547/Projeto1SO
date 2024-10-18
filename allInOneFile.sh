@@ -18,9 +18,12 @@ compModDate(){
 
 	if [[ "$file1" -nt "$file2" ]];then
 		return 0	
-	fi
-	return 1
-	
+    elif [[ "$file2" -nt "$file1" ]];then
+        echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
+        return 1
+    else
+        return 1 #if dates are equal it will not copy the file
+    fi	
 }
 
 copyFile(){
@@ -67,8 +70,6 @@ copyFile(){
                 echo "cp -a $file $destinationFormat/$fileName"
                 return 0
             else
-
-                echo "[Warning] BackedUp file newer than file in directory (Should not happen)"
                 return 1
 
             fi
