@@ -1,14 +1,16 @@
-#!/bin/bash
+#
+# call copy for each source file!/bin/bash
 
 # João Pereira[120010] & Thiago Vicente[121497]
 
 
-# Assuming source_dir is the directory where your scripts are located
-source_dir="./functions"  # or set it to your desired directory
+# Add all functions to source
+source_dir="./functions"
 
 for file in "$source_dir"/*.sh; do
     [ -f "$file" ] && source "$file"
 done
+
 
 # Initializing variables
 checking=""
@@ -28,6 +30,7 @@ cDeleted=0;
 sizeCopied=0;
 sizeDeleted=0;
 
+
 ## MAIN
 
 # get options/flags
@@ -38,7 +41,9 @@ while getopts ":cb:r:" op; do
 		checking=1
 	;;
 	*)
-		usage
+		
+		echo "[SHOULD BE] ./backup.sh [-c] dir_source dir_backup"
+		exit 1
 	;;
     esac
 done
@@ -61,6 +66,7 @@ if [ ! -d $backup_dir ];then
 fi
 
 
+# call copy for each source file
 for file in "$source_dir"/*; do
     	
 	if [[ -e $file ]]; then  # make sure
