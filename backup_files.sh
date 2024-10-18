@@ -1,5 +1,8 @@
 #!/bin/bash
 
+. ./copyFile.sh
+source copyFile.sh
+
 # Initializing variables
 checking=""
 filter=""
@@ -31,48 +34,9 @@ nfound(){
 	exit 1
 }
 
-compModDate(){
+#compModDate(){
 	# Check wich file was first created and increment/print warning 
-}
-
-# after validation does backup. EXPECTS VALIDATED INPUT
-backup(){
-    	#function has 3 arguments
-    	#argument1 : absolute path of file to be copied
-   	#argument2 : absolute path of directory where file will be copied
-    	#argument3 : -c 
-    	
-
-    if [[ $# == 2 ]]; then
-        local file=$1
-        local destination=$2
-
-        cp -a $file "$destination"
-    
-        if [[ $? -eq 0 ]]; then
-            
-            echo "cp -a $file $destination"
-
-            echo "" #prints new line
-            return 0
-        else
-            echo "Error while copying"
-        
-            echo "" #prints new line
-            return 1
-        fi
-
-    elif [[ $# == 3 ]]; then
-        local file=$2
-        local destination=$3
-        
-        echo "cp -a $file $destination"
-        echo ""
-
-        return 0
-    fi
-}
-
+#}
 
 ## MAIN
 
@@ -114,7 +78,7 @@ fi
 for file in "$source_dir"/*; do
     	
 	if [[ -e $file ]]; then  # make sure
-		backup "$file" "$backup_dir"
+		copyFile "$file" "$backup_dir"
 	fi
 
 done
