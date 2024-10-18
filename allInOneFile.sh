@@ -49,15 +49,11 @@ copyFile(){
             echo "Bad use of function copyFile"
         fi
 
-
         fileName="$(echo $file | tr "/" " " | awk '{print $NF}')"
 
-        if [[ $destination == */  ]]; then
-            destinationFormat="${destination%?}"        
-        fi
-
+        
     
-        if [[ -f "$destinationFormat/$fileName" ]]; then
+        if [[ -f "$destination/$fileName" ]]; then
             compModDate $file "$destination/$fileName"
 
             if [[ $? -eq 0 ]]; then
@@ -67,7 +63,7 @@ copyFile(){
                     return 0
                 fi
 
-                echo "cp -a $file $destinationFormat/$fileName"
+                echo "cp -a $file $destination/$fileName"
                 return 0
             else
                 return 1
@@ -80,7 +76,7 @@ copyFile(){
                 cp -a $file $destination
             fi
 
-            echo "cp -a $file $destinationFormat/$fileName"
+            echo "cp -a $file $destination/$fileName"
 
             return 0
 
@@ -138,6 +134,14 @@ fi
 source_dir="$1"
 backup_dir="$2"
 
+if [[ $souce_dir == */ ]]; then
+    source_dir="${source_dir:0:-1}" #removes last bar(/) from source path (for formating reasons)
+fi
+
+if [[ $backup_dir == */ ]]; then
+    backup_dir="${backup_dir:0:-1}" #removes last bar(/) from backup_dir path (for formatting reasons)
+fi
+
 # validate source directory
 if [ ! -d $source_dir ]; then
 	nfound "source" "$source_dir"
@@ -167,7 +171,8 @@ for file in "$source_dir"/*; do
 done
 
 ## Remove files from backup_dir that are not on source_dir
-for file in "$backup_dir"/*; do
+for file in "./$backup_dir"/*; do
+    echo $file
     filename=$(basename "$file")
     if [[ ! -e "$source_dir/$filename" ]]; then
         	rm "$file"
