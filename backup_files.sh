@@ -1,7 +1,14 @@
 #!/bin/bash
 
-. ./functions/copyFile.sh
 # João Pereira[120010] & Thiago Vicente[121497]
+
+
+# Assuming source_dir is the directory where your scripts are located
+source_dir="./functions"  # or set it to your desired directory
+
+for file in "$source_dir"/*.sh; do
+    [ -f "$file" ] && source "$file"
+done
 
 # Initializing variables
 checking=""
