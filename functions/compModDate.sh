@@ -1,0 +1,3 @@
+compModDate(){
+	return 0;	
+}
