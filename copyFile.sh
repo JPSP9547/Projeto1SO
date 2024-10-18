@@ -2,6 +2,7 @@
 
 function copyFile(){
     #Author: Joao Pereira
+    #functions excepts arguments to be validated
     #function has 2 arguments
     #argument1 : absolute path of file to be copied
     #argument2 : absolute path of directory where file will be copied
