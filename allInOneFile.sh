@@ -1,9 +1,33 @@
 #!/bin/bash
 
+######### Variabes
+
+checking=""
+filter=""
+exclude_file=""
+source_dir=""
+backup_dir=""
+
+# Initializing counter
+cError=0;
+cWarnings=0;
+cUpdated=0;
+cCopied=0;
+cDeleted=0;
+
+# Initializing sizes
+sizeCopied=0;
+sizeDeleted=0;
+
+
+
 ########### FUNCTIONS
 usage(){
-		echo "[SHOULD BE] ./backup.sh [-c] dir_source dir_backup"
-		exit 1
+	echo "[SHOULD BE] ./backup.sh [-c] dir_source dir_backup"
+	end_print
+}
+end_print(){
+	echo "While backuping src: $cErrors Errors; $cWarnings Warnings; $cUpdated Updated; $cCopied Copied (${sizeCopied}B); $cDeleted deleted (${sizeDeleted}B)"
 }
 compModDate(){
 	# Functions has two parameters
@@ -20,6 +44,7 @@ compModDate(){
 		return 0	
     elif [[ "$file2" -nt "$file1" ]];then
         echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
+	  ((cWarnings++))
         return 1
     else
         return 1 #if dates are equal it will not copy the file
@@ -49,10 +74,9 @@ copyFile(){
             echo "Bad use of function copyFile"
         fi
 
-        fileName="$(echo $file | tr "/" " " | awk '{print $NF}')"
-
+	  file="$(echo $file | tr -s '/')"
+        fileName="$(echo $file | tr "/" " " | awk '{print $NF}')"    
         
-    
         if [[ -f "$destination/$fileName" ]]; then
             compModDate $file "$destination/$fileName"
 
@@ -64,8 +88,14 @@ copyFile(){
                 fi
 
                 echo "cp -a $file $destination/$fileName"
-                return 0
-            else
+	
+		    file_size=$(stat -c %s "$file")
+    			((cUpdated++))
+			sizeCopied=$((sizeCopied + file_size))
+		    	return 0
+
+			
+	    else
                 return 1
 
             fi
@@ -77,33 +107,16 @@ copyFile(){
             fi
 
             echo "cp -a $file $destination/$fileName"
+            ((cCopied++))
 
+		file_size=$(stat -c %s "$file")
+		sizeCopied=$((sizeCopied + file_size))
             return 0
 
         fi
 }
 
 
-
-
-######### Variabes
-
-checking=""
-filter=""
-exclude_file=""
-source_dir=""
-backup_dir=""
-
-# Initializing counter
-cError=0;
-cWarnings=0;
-cUpdated=0;
-cCopied=0;
-cDeleted=0;
-
-# Initializing sizes
-sizeCopied=0;
-sizeDeleted=0;
 
 
 ########### MAIN
@@ -171,14 +184,20 @@ for file in "$source_dir"/*; do
 done
 
 ## Remove files from backup_dir that are not on source_dir
-for file in "./$backup_dir"/*; do
-    echo $file
-    filename=$(basename "$file")
-    if [[ ! -e "$source_dir/$filename" ]]; then
-        	rm "$file"
-		((cDeleted++))
-    fi
-done
+# Skip when backup dir is empty 
+if [ ! -z "$(ls -A "./$backup_dir")" ]; then 
+	for file in "./$backup_dir"/*; do
+    		filename=$(basename "$file")
+    		if [[ ! -e "$source_dir/$filename" ]]; then
+     
+			file_size=$(stat -c %s "$file")
+			sizeDeleted=$((sizeDeleted + file_size))
+			if [ -z "$checking" ];then
+	    			rm "$file"
+			fi
+	    		((cDeleted++))
+    		fi
+	done
+fi
 
-
-
+end_print
