@@ -147,12 +147,21 @@ fi
 source_dir="$1"
 backup_dir="$2"
 
+# check if it is a absolute path or not
+if [[ "$source_dir" != /* ]]; then
+    source_dir="./$source_dir"
+fi
+if [[ "$backup_dir" != /* ]]; then
+    backup_dir="./$backup_dir"
+fi
+
+# removes last bar(/) from backup_dir path (for formatting reasons)
 if [[ $souce_dir == */ ]]; then
-    source_dir="${source_dir:0:-1}" #removes last bar(/) from source path (for formating reasons)
+    source_dir="${source_dir:0:-1}" 
 fi
 
 if [[ $backup_dir == */ ]]; then
-    backup_dir="${backup_dir:0:-1}" #removes last bar(/) from backup_dir path (for formatting reasons)
+    backup_dir="${backup_dir:0:-1}"
 fi
 
 # validate source directory
@@ -185,8 +194,8 @@ done
 
 ## Remove files from backup_dir that are not on source_dir
 # Skip when backup dir is empty 
-if [ ! -z "$(ls -A "./$backup_dir")" ]; then 
-	for file in "./$backup_dir"/*; do
+if [ ! -z "$(ls -A "$backup_dir")" ]; then 
+	for file in "$backup_dir"/*; do
     		filename=$(basename "$file")
     		if [[ ! -e "$source_dir/$filename" ]]; then
      
@@ -201,3 +210,4 @@ if [ ! -z "$(ls -A "./$backup_dir")" ]; then
 fi
 
 end_print
+
