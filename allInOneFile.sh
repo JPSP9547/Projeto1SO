@@ -156,7 +156,7 @@ fi
 # call copy for each source file
 for file in "$source_dir"/*; do
     	
-	if [[ -e $file ]]; then  # make sure
+	if [[ -f $file ]]; then  # make sure
 		if [ "$checking" == "1" ];then
 			copyFile 1 "$file" "$backup_dir"
 		else
