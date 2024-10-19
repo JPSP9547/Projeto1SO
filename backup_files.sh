@@ -8,27 +8,14 @@ exclude_file=""
 source_dir=""
 backup_dir=""
 
-# Initializing counter
-cError=0;
-cWarnings=0;
-cUpdated=0;
-cCopied=0;
-cDeleted=0;
-
-# Initializing sizes
-sizeCopied=0;
-sizeDeleted=0;
-
 
 
 ########### FUNCTIONS
 usage(){
 	echo "[SHOULD BE] ./backup.sh [-c] dir_source dir_backup"
-	end_print
+	exit 1
 }
-end_print(){
-	echo "While backuping src: $cErrors Errors; $cWarnings Warnings; $cUpdated Updated; $cCopied Copied (${sizeCopied}B); $cDeleted deleted (${sizeDeleted}B)"
-}
+
 compModDate(){
 	# Functions has two parameters
 	# arg1 is the source_dir file
@@ -44,7 +31,6 @@ compModDate(){
 		return 0	
     elif [[ "$file2" -nt "$file1" ]];then
         echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
-	  ((cWarnings++))
         return 1
     else
         return 1 #if dates are equal it will not copy the file
@@ -85,13 +71,10 @@ copyFile(){
                 if [[ $copy -eq 1 ]]; then
                     cp -a $file $destination
                     return 0
+
                 fi
 
                 echo "cp -a $file $destination/$fileName"
-	
-		    file_size=$(stat -c %s "$file")
-    			((cUpdated++))
-			sizeCopied=$((sizeCopied + file_size))
 		    	return 0
 
 			
@@ -107,10 +90,6 @@ copyFile(){
             fi
 
             echo "cp -a $file $destination/$fileName"
-            ((cCopied++))
-
-		file_size=$(stat -c %s "$file")
-		sizeCopied=$((sizeCopied + file_size))
             return 0
 
         fi
@@ -173,6 +152,7 @@ fi
 if [ ! -d $backup_dir ];then
 	if [ -z "$checking" ];then
 		mkdir "$backup_dir"
+                    
 	fi
 	echo "mkdir $backup_dir"
 fi
@@ -198,16 +178,14 @@ if [ ! -z "$(ls -A "$backup_dir")" ]; then
 	for file in "$backup_dir"/*; do
     		filename=$(basename "$file")
     		if [[ ! -e "$source_dir/$filename" ]]; then
-     
-			file_size=$(stat -c %s "$file")
-			sizeDeleted=$((sizeDeleted + file_size))
-			if [ -z "$checking" ];then
-	    			rm "$file"
-			fi
-	    		((cDeleted++))
+
+				if [ -z "$checking" ];then
+						rm "$file"
+				fi
+
     		fi
 	done
 fi
 
-end_print
+
 
