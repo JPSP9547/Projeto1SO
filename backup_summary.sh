@@ -108,7 +108,6 @@ copyFile(){
                 if [[ $copy -eq 1 ]]; then
                     cp -a "$file" "$destination"
 					if [[ $? -ne 0 ]]; then
-					echo 1
 						((cError++))
 					else
 						file_size=$(stat -c %s "$file")
