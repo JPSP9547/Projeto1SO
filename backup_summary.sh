@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s dotglob
+
 ######### Variables
 
 checking=""
@@ -23,7 +25,23 @@ cDeleted=0
 sizeCopied=0
 sizeDeleted=0
 
-########### 
+########### FUNCTIONS
+
+findElement(){
+	#FUNCTIONS NEEDS 2 params
+	# $1 is the array
+	# $2 is the element to search
+	args=($@)
+	lst=(${args[@]::${#args[@]}-1})
+	toFind=${args[@]: -1}
+	for i in "$lst";do
+  		if [[ $i == "$toFind" ]];then
+    			return 0
+  		fi
+	done
+	return 1
+}
+
 nfound(){
 	# Prints not found message
 	# arg1 is the field name
@@ -245,6 +263,10 @@ for item in "$source_dir"/*; do
 	if [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then 
 			if [ "$checking" == "1" ];then
+			findElement ${exclude_list[@]} "$base_item"  
+			if [[ $? -eq 0 ]];then  
+        			continue 
+    			fi	
 				copyFile 1 "$item" "$backup_dir"
 			else
 				copyFile "$item" "$backup_dir"
