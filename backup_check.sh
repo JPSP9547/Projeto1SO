@@ -13,8 +13,8 @@ backup_check(){
         return 1
     fi
 
-    work_dir=$1
-    backup_dir=$2
+    local work_dir=$1
+    local backup_dir=$2
 
     # removes last bar(/) from backup_dir path (for formatting reasons)
     if [[ $work_dir == */ ]]; then
@@ -24,75 +24,75 @@ backup_check(){
     if [[ $backup_dir == */ ]]; then
         backup_dir="${backup_dir:0:-1}"
     fi
+    
+    local arrayOfFile=() #array where files already checked will be put
 
-    if [ ! -z "$(ls -A "$backup_dir")" ]; then 
-        for file in "$backup_dir"/*; do
-            fileName=$(basename "$file")
+    if [[ ! -z "$(ls -A "$work_dir")" ]]; then
+        for file in "$work_dir"/*; do
             if [[ -d $file ]]; then
                 #TODO
-                #check if folder exists in work_dir
-                #call this script again but backup_dir = current dir and work_dir = work_dir + current_dir(only last part)
-                folderName=echo $file | tr "/" " " | awk '{print $NF}'
-                work_dirRecursive="$work_dir/$folderName"
-                backup_dirRecursive="$file"
+                #CODIGO PARA TRABALHAR COM PASTAS
+                folderName=$( basename $file ) #**
+		        local backup_dirRecursive="$backup_dir/$folderName"
 
+                if [[ -d $backup_dirRecursive ]]; then
+                    local work_dirRecursive="$file"
+                    backup_check $work_dirRecursive $backup_dirRecursive
 
-            if [[ -d $work_dirRecursive ]]; then
-                backup_check $work_dirRecursive $backup_dirRecursive    
-            else
-                echo "Folder $file does not exist on $work_dir"
-            fi
-
-
-            else
-                if [[ -f "$work_dir/$fileName" ]];then
-                    if [[ $(md5sum "$file" | awk '{print $1}') != $(md5sum "$work_dir/$fileName" | awk '{print $1}') ]]; then
-                        echo "$file and $work_dir/$fileName differ"
-                    fi
                 else
-                    echo "$file does not exist in $work_dir (SHOULD NOT HAPPEN)"
-                fi
-            fi
-        done
-
-        for file in "$work_dir"/*; do
-            fileName=$(basename "$file")
-            if [[ -d $file ]]; then
-                echo $file
-                folderName=echo $file | tr "/" " " | awk '{print $NF}'
-                work_dirRecursive="$file"
-                backup_dirRecursive="$backup_dir/$folderName"
-
-
-            if [[ -d $backup_dirRecursive ]]; then
-                backup_check $work_dirRecursive $backup_dirRecursive    
-            else
-                echo "Folder $file does not exist on $backup_dir"
-            fi
-
-
-            else
-                if [[ -f "$backup_dir/$fileName" ]];then
-                    if [[ $(md5sum "$file" | awk '{print $1}') != $(md5sum "$backup_dir/$fileName" | awk '{print $1}') ]]; then
-                        echo "$file and $backup_dir/$fileName differ"
-                    fi
-                else
-                    echo "$file does not exist in $backup_dir (SHOULD NOT HAPPEN)"
-                fi
-            fi
-        done
-
-    elif [ ! -z "$(ls -A "$work_dir")" ]; then
-        for file in "$work_dir"/*; do
-            if [[ -f $file ]]; then
+                    echo "[FOLDER] $folderName/ doest not exist on $backup_dir"
                 
-                fileName=$(basename "$file")
+                fi
 
-                echo "$file does not exist on $backup_dir"
+            elif [[ -f $file ]]; then
+                fileName=$(basename "$file")
+                
+                if  [[ ! -f "$backup_dir/$fileName" ]]; then
+                    echo "[FILE] $file does not exist on $backup_dir/"
+                else
+                    mdSumWork=$(md5sum $file | awk '{print $1}')
+                    mdSumBack=$(md5sum "$backup_dir/$fileName" | awk '{print $1}')
+                    
+                    if [[ $mdSumWork != $mdSumBack ]]; then
+                        echo "[FILE] $file and $backup_dir/$fileName differ"
+                    fi
+                fi
+            else
+                echo "Error while analysing files"
             fi
         done
-
     fi
+
+    if [[ ! -z "$(ls -A "$backup_dir")" ]]; then
+         for file in "$backup_dir"/*; do
+            if [[ -d $file ]]; then
+                #TODO
+                #CODIGO PARA TRABALHAR COM PASTAS
+                folderName=$( basename $file ) #**
+		        work_dirRecursive="$work_dir/$folderName"
+
+                if [[ -d $work_dirRecursive ]]; then
+                    backup_dirRecursive="$file"
+                    backup_check $work_dirRecursive $backup_dirRecursive
+
+                else
+                    echo "[FOLDER] $backup_dir/$folderName/ doest not exist on $work_dir"
+                
+                fi
+
+            elif [[ -f $file ]]; then
+                fileName=$(basename "$file")
+                
+                if  [[ ! -f "$work_dir/$fileName" ]]; then
+                    echo "$file does not exist on $work_dir/ (SHOULD NOT HAPPEN)"
+                fi
+                #arrayOfFile+="$backup_dir/$fileName"
+            else
+                echo "Error while analysing files"
+            fi
+        done
+    fi
+
 
 }
 
