@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s dotglob
+
 ######### Variables
 
 checking=""
@@ -12,7 +14,23 @@ exclude_file=""
 regx=".*"
 hasExclude=0
 
-########### 
+########### FUNCTIONS
+
+findElement(){
+	#FUNCTIONS NEEDS 2 params
+	# $1 is the array
+	# $2 is the element to search
+	args=($@)
+	lst=(${args[@]::${#args[@]}-1})
+	toFind=${args[@]: -1}
+	for i in "$lst";do
+  		if [[ $i == "$toFind" ]];then
+    			return 0
+  		fi
+	done
+	return 1
+}
+
 nfound(){
 	# Prints not found message
 	# arg1 is the field name
@@ -196,13 +214,13 @@ fi
 for item in "$source_dir"/*; do
 
 	base_item=$(basename "$item")
-    
-	if [[ "${exclude_list[*]}" == *"$base_item"* ]]; then
-        continue 
-    fi
 
 	if [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then 
+			findElement ${exclude_list[@]} "$base_item"  
+			if [[ $? -eq 0 ]];then  
+        			continue 
+    			fi	
 			if [ "$checking" == "1" ];then
 				copyFile 1 "$item" "$backup_dir"
 			else
