@@ -106,23 +106,18 @@ copyFile(){
             if [[ $? -eq 0 ]]; then
 
                 if [[ $copy -eq 1 ]]; then
-                    cp -a "$file" "$destination"
+                    	cp -a "$file" "$destination"
+                		echo "cp -a $file $destination/$fileName"
 					if [[ $? -ne 0 ]]; then
 						((cError++))
+						return 1
 					else
 						file_size=$(stat -c %s "$file")
 						((cCopied++))
 						sizeCopied=$((sizeCopied + file_size))
 						return 0
 					fi
-				fi
-
-                echo "cp -a $file $destination/$fileName"
-				file_size=$(stat -c %s "$file")
-				((cUpdated++))
-				sizeCopied=$((sizeCopied + file_size))
-		    	return 0
-			
+				fi	
 	    	else
                 return 1
             fi
@@ -131,23 +126,24 @@ copyFile(){
 
         if [[ $copy -eq 1 ]]; then
             cp -a "$file" "$destination"
-			if [[ $? -ne 0 ]]; then
+        	echo "cp -a $file $destination/$fileName"
+		if [[ $? -ne 0 ]]; then
 				((cError++))
-			else
+				return 1
+		else
 				((cCopied++))
 				file_size=$(stat -c %s "$file")
 				sizeCopied=$((sizeCopied + file_size))
-				return 0
-			fi
-        fi
-
+        			return 0
+		fi
+     		
+	  fi
+	
         echo "cp -a $file $destination/$fileName"
 		((cCopied++))
 		file_size=$(stat -c %s "$file")
 		sizeCopied=$((sizeCopied + file_size))
-				
 
-        return 0
     fi
 }
 
