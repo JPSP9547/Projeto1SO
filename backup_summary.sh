@@ -59,7 +59,7 @@ usage(){
 	end_print 1
 }
 end_print(){
-
+    # prints the final output or returns a recursive data
 	if [[ "$is_recursive" -eq 1 ]];then
 		local result=("$cError" "$cWarnings" "$cUpdated" "$cCopied" "$sizeCopied" "$cDeleted" "$sizeDeleted")
 		echo "${result[@]}"
@@ -238,6 +238,7 @@ if [ ! -d "$backup_dir" ];then
 		mkdir -p "$backup_dir"
 		if [[ $? -ne 0 ]]; then
 			((cError++))
+			end_print
 		fi
 	fi
 	echo "mkdir $backup_dir"
