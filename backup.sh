@@ -1,9 +1,9 @@
 #!/bin/bash
 
+# show hidden files
 shopt -s dotglob
 
 ######### Variables
-
 checking=""
 filter=""
 exclude_file=""
@@ -15,11 +15,11 @@ regx=".*"
 hasExclude=0
 
 ########### FUNCTIONS
-
 findElement(){
 	#FUNCTIONS NEEDS 2 params
 	# $1 is the array
 	# $2 is the element to search
+	# returns 0 if array constains element
 	args=($@)
 	lst=(${args[@]::${#args[@]}-1})
 	toFind=${args[@]: -1}
@@ -42,6 +42,8 @@ nfound(){
 }
 
 usage(){
+    # Prints the correct usage of the script
+    # No parameters
 	if [[ "$is_recursive" -eq 0 ]];then
 		echo "[USAGE] ./backup.sh [-c] [-b excludefile] [-r regx] dir_source dir_backup"
 	fi
@@ -60,13 +62,13 @@ compModDate(){
 	local file2="$2"
 
 	if [[ "$file1" -nt "$file2" ]];then
-		return 0	
+		return 0
     elif [[ "$file2" -nt "$file1" ]];then
         echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
         return 1
     else
         return 1 #if dates are equal it will not copy the file
-    fi	
+    fi
 }
 
 copyFile(){
@@ -82,7 +84,7 @@ copyFile(){
             destination=$2
             copy=1
         elif [[ $# -eq 3 ]]; then
-            
+
             file=$2
             destination=$3
             copy=0
@@ -94,7 +96,7 @@ copyFile(){
 
 	  	file="$(echo $file | tr -s '/')"
         fileName="$(basename "$file")"
-        
+
         if [[ -f "$destination/$fileName" ]]; then
             compModDate "$file" "$destination/$fileName"
 
@@ -105,10 +107,10 @@ copyFile(){
                 fi
 
                 echo "cp -a $file $destination/$fileName"
-	
+
 		    	return 0
 
-			
+
 	    	else
                 return 1
 
@@ -130,7 +132,7 @@ copyFile(){
 ########### MAIN
 
 # save the name for recursive call
-function_call="$0" 
+function_call="$0"
 
 
 # get options/flags
@@ -151,15 +153,15 @@ while getopts ":czb:r:" op; do
 	z)
 		is_recursive=1
 	;;
-	*)		
-		usage 
+	*)
+		usage
 	;;
     esac
 done
 
 shift $((OPTIND-1))
 if [[ $# -ne 2 ]]; then
-	usage 
+	usage
 fi
 
 if [[ $hasExclude == 1 ]];then
@@ -180,7 +182,7 @@ if [[ "$backup_dir" != /* && "$backup_dir" != ./* ]]; then
 fi
 # removes last bar(/) from backup_dir path (for formatting reasons)
 if [[ $source_dir == */ ]]; then
-    source_dir="${source_dir:0:-1}" 
+    source_dir="${source_dir:0:-1}"
 fi
 
 if [[ $backup_dir == */ ]]; then
@@ -197,6 +199,10 @@ fi
 if [ ! -d "$backup_dir" ];then
 	if [ -z "$checking" ];then
 		mkdir -p "$backup_dir"
+		if [[ $? -eq 1 ]];then
+		    echo "[ERROR] could not create directory $backup_sir"
+			exit 1
+		fi
 
 	fi
 	echo "mkdir $backup_dir"
@@ -206,7 +212,7 @@ fi
 if [[ "$hasExclude" -eq 1 ]]; then
     mapfile -t exclude_list < "$exclude_file"
 else
-    exclude_list=() 
+    exclude_list=()
 fi
 
 ## start backup of the source files
@@ -216,11 +222,11 @@ for item in "$source_dir"/*; do
 	base_item=$(basename "$item")
 
 	if [[ $base_item =~ $regx ]]; then
-		if [[ -f $item ]]; then 
-			findElement ${exclude_list[@]} "$base_item"  
-			if [[ $? -eq 0 ]];then  
-        			continue 
-    			fi	
+		if [[ -f $item ]]; then
+			findElement ${exclude_list[@]} "$base_item"
+			if [[ $? -eq 0 ]];then
+        			continue
+    			fi
 			if [ "$checking" == "1" ];then
 				copyFile 1 "$item" "$backup_dir"
 			else
@@ -228,7 +234,7 @@ for item in "$source_dir"/*; do
 			fi
 		elif [[ -d $item ]];then
 			new_backup_dir="$backup_dir/$(basename "$base_item")"
-			
+
 			if [[ "$checking" -eq 1 ]]; then
 				command="$function_call -c -z $item $new_backup_dir"
 			else
@@ -237,7 +243,9 @@ for item in "$source_dir"/*; do
 
 			#echo $command
 			output="$($command )"
-			echo "$output" | grep -E '^(cp|mkdir)' 
+
+			# prints every cp and mkdir statement
+			echo "$output" | grep -E '^(cp|mkdir)'
 
 		fi
 	fi
@@ -245,8 +253,8 @@ for item in "$source_dir"/*; do
 done
 
 ## Remove files from backup_dir that are not on source_dir
-# Skip when backup dir is empty 
-if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then 
+# Skip when backup dir is empty
+if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
 	for file in "$backup_dir"/*; do
     	filename=$(basename "$file")
     	if [[ ! -e "$source_dir/$filename" ]]; then
@@ -258,5 +266,3 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
     	fi
 	done
 fi
-
-
