@@ -96,4 +96,4 @@ backup_check(){
 
 }
 
-backup_check $1 $2
+backup_check "$1" "$2"
