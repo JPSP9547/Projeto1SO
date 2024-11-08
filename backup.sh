@@ -86,6 +86,7 @@ copyFile(){
         elif [[ $# -eq 3 ]]; then
 
             file=$2
+
             destination=$3
             copy=0
 
@@ -98,10 +99,11 @@ copyFile(){
         fileName="$(basename "$file")"
 
         if [[ -f "$destination/$fileName" ]]; then
+
             compModDate "$file" "$destination/$fileName"
 
             if [[ $? -eq 0 ]]; then
-
+                echo $file 4
                 if [[ $copy -eq 1 ]]; then
                     cp -a "$file" "$destination"
                 fi
@@ -134,7 +136,6 @@ copyFile(){
 # save the name for recursive call
 function_call="$0"
 
-
 # get options/flags
 while getopts ":czb:r:" op; do
     case $op in
@@ -161,7 +162,9 @@ done
 
 shift $((OPTIND-1))
 if [[ $# -ne 2 ]]; then
-	usage
+echo $2
+echo $@
+    usage
 fi
 
 if [[ $hasExclude == 1 ]];then
@@ -172,6 +175,8 @@ fi
 
 source_dir="$1"
 backup_dir="$2"
+source_dir="${source_dir//\"/}"
+backup_dir="${backup_dir//\"/}"
 
 
 if [[ "$source_dir" != /* &&  "$source_dir" != ./* ]]; then
@@ -180,6 +185,7 @@ fi
 if [[ "$backup_dir" != /* && "$backup_dir" != ./* ]]; then
     backup_dir="./$backup_dir"
 fi
+
 # removes last bar(/) from backup_dir path (for formatting reasons)
 if [[ $source_dir == */ ]]; then
     source_dir="${source_dir:0:-1}"
@@ -188,12 +194,13 @@ fi
 if [[ $backup_dir == */ ]]; then
     backup_dir="${backup_dir:0:-1}"
 fi
-
 # validate source directory
-if [ ! -d "$source_dir" ]; then
+
+if [ ! -d "$source_dir/" ]; then
 	nfound "source" "$source_dir"
 	exit 1
 fi
+
 
 # backup directory
 if [ ! -d "$backup_dir" ];then
@@ -208,7 +215,6 @@ if [ ! -d "$backup_dir" ];then
 	echo "mkdir $backup_dir"
 fi
 
-
 if [[ "$hasExclude" -eq 1 ]]; then
     mapfile -t exclude_list < "$exclude_file"
 else
@@ -217,16 +223,17 @@ fi
 
 ## start backup of the source files
 # call copy for each source file
-for item in "$source_dir"/*; do
 
+for item in "$source_dir"/*; do
 	base_item=$(basename "$item")
 
 	if [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then
+
 			findElement ${exclude_list[@]} "$base_item"
 			if [[ $? -eq 0 ]];then
         			continue
-    			fi
+           fi
 			if [ "$checking" == "1" ];then
 				copyFile 1 "$item" "$backup_dir"
 			else
@@ -234,15 +241,14 @@ for item in "$source_dir"/*; do
 			fi
 		elif [[ -d $item ]];then
 			new_backup_dir="$backup_dir/$(basename "$base_item")"
-
 			if [[ "$checking" -eq 1 ]]; then
-				command="$function_call -c -z $item $new_backup_dir"
+			    params=" -c -z \"$item\" \"$new_backup_dir\""
 			else
-				command="$function_call -z $item $new_backup_dir"
+				params="-z \"$item\" \"$new_backup_dir\""
 			fi
 
 			#echo $command
-			output="$($command )"
+			output="$(eval "$function_call $params")"
 
 			# prints every cp and mkdir statement
 			echo "$output" | grep -E '^(cp|mkdir)'
