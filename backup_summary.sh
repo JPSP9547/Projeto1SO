@@ -255,6 +255,10 @@ fi
 # call copy for each source file
 for item in "$source_dir"/*; do
 
+    if [[ "$item" == "$backup_dir" ]]; then
+       continue
+    fi
+
 	base_item=$(basename "$item")
 
 	if [[ "${exclude_list[*]}" == *"$base_item"* ]]; then

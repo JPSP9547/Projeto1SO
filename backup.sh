@@ -225,11 +225,12 @@ fi
 # call copy for each source file
 
 for item in "$source_dir"/*; do
-	base_item=$(basename "$item")
 
-	if [[ "$item" == "$backup_dir" ]]; then
-        continue
+    if [[ "$item" == "$backup_dir" ]]; then
+       continue
     fi
+
+	base_item=$(basename "$item")
 
 	if [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then
