@@ -227,6 +227,10 @@ fi
 for item in "$source_dir"/*; do
 	base_item=$(basename "$item")
 
+	if [[ "$item" == "$backup_dir" ]]; then
+        continue
+    fi
+
 	if [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then
 
