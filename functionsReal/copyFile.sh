@@ -54,5 +54,3 @@ copyFile(){
         return 0
     fi
 }
-
-

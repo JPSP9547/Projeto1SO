@@ -3,6 +3,16 @@
 # show hidden files
 shopt -s dotglob
 
+function_call="$0"
+SCRIPT_DIR="$(dirname "$(realpath "$function_call")")"
+DIR="$SCRIPT_DIR/functionsReal"
+
+for file in "$DIR"/*; do
+    if [[ -f "$file" ]]; then
+        source "$file"
+    fi
+done
+
 ######### Variables
 checking=""
 filter=""
@@ -14,127 +24,6 @@ exclude_file=""
 regx=".*"
 hasExclude=0
 
-########### FUNCTIONS
-findElement(){
-	#FUNCTIONS NEEDS 2 params
-	# $1 is the array
-	# $2 is the element to search
-	# returns 0 if array constains element
-	args=($@)
-	lst=(${args[@]::${#args[@]}-1})
-	toFind=${args[@]: -1}
-	for i in "$lst";do
-  		if [[ $i == "$toFind" ]];then
-    			return 0
-  		fi
-	done
-	return 1
-}
-
-nfound(){
-	# Prints not found message
-	# arg1 is the field name
-	# arg2 is the given path
-	if [[ "$is_recursive" -eq 0 ]];then
-		echo "[NOTFOUND]: "$1 ">" $2
-	fi
-	exit 1
-}
-
-usage(){
-    # Prints the correct usage of the script
-    # No parameters
-	if [[ "$is_recursive" -eq 0 ]];then
-		echo "[USAGE] ./backup.sh [-c] [-b excludefile] [-r regx] dir_source dir_backup"
-	fi
-	exit 1
-}
-
-compModDate(){
-	# Functions has two parameters
-	# arg1 is the source_dir file
-	# arg2 is the backup_dir file
-	# RETURN: returns 0 if arg1 last modification was after arg2 last modification
-	# RETURN: return 1 otherwise
-	# FUNCTIONS ASSUMES THAT ARG1 and ARG2 exists
-
-	local file1="$1"
-	local file2="$2"
-
-	if [[ "$file1" -nt "$file2" ]];then
-		return 0
-    elif [[ "$file2" -nt "$file1" ]];then
-        echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
-        return 1
-    else
-        return 1 #if dates are equal it will not copy the file
-    fi
-}
-
-copyFile(){
-    	#function has 3 arguments
-    	#argument1 : absolute path of file to be copied
-     	#argument2 : absolute path of directory where file will be copied
-    	#argument3 : -c
-        #function checks dates of files and only copies if source file is newer than backed files
-        #FUNCTION ASSUMES ARGUMENT1 IS NOT A DIRECTORY
-
-        if [[ $# -eq 2 ]]; then
-            file=$1
-            destination=$2
-            copy=1
-        elif [[ $# -eq 3 ]]; then
-
-            file=$2
-
-            destination=$3
-            copy=0
-
-        else
-            echo "Bad use of function copyFile"
-			return 1
-        fi
-
-	  	file="$(echo $file | tr -s '/')"
-        fileName="$(basename "$file")"
-
-        if [[ -f "$destination/$fileName" ]]; then
-
-            compModDate "$file" "$destination/$fileName"
-
-            if [[ $? -eq 0 ]]; then
-                echo $file 4
-                if [[ $copy -eq 1 ]]; then
-                    cp -a "$file" "$destination"
-                fi
-
-                echo "cp -a $file $destination/$fileName"
-
-		    	return 0
-
-
-	    	else
-                return 1
-
-            fi
-
-        else
-
-        if [[ $copy -eq 1 ]]; then
-            cp -a "$file" "$destination"
-         fi
-
-        echo "cp -a $file $destination/$fileName"
-
-        return 0
-    fi
-}
-
-
-########### MAIN
-
-# save the name for recursive call
-function_call="$0"
 
 # get options/flags
 while getopts ":czb:r:" op; do
