@@ -115,9 +115,6 @@ fi
 
 for item in "$source_dir"/*; do
 
-    if [[ "$item" == "$backup_dir" ]]; then
-       continue
-    fi
 
 	base_item=$(basename "$item")
 
