@@ -56,7 +56,7 @@ usage(){
 	if [[ "$is_recursive" -eq 0 ]];then
 		echo "[USAGE] ./backup.sh [-c] [-b excludefile] [-r regx] dir_source dir_backup"
 	fi
-	end_print 1
+	end_print
 }
 end_print(){
     # prints the final output or returns a recursive data
@@ -211,13 +211,16 @@ fi
 source_dir="$1"
 backup_dir="$2"
 
+source_dir=$(realpath "$1")
+backup_dir=$(realpath "$2")
 
-if [[ "$source_dir" != /* &&  "$source_dir" != ./* ]]; then
-	source_dir="./$source_dir"
+
+if [[ "$backup_dir" == "$source_dir"* ]]; then
+  echo "[ERROR] $backup_dir is inside $source_dir"
+  end_print
 fi
-if [[ "$backup_dir" != /* && "$backup_dir" != ./* ]]; then
-    backup_dir="./$backup_dir"
-fi
+
+
 # removes last bar(/) from backup_dir path (for formatting reasons)
 if [[ $source_dir == */ ]]; then
     source_dir="${source_dir:0:-1}"
@@ -230,7 +233,7 @@ fi
 # validate source directory
 if [ ! -d "$source_dir" ]; then
 	nfound "source" "$source_dir"
-	exit 1
+	end_print
 fi
 
 # backup directory
@@ -255,7 +258,6 @@ fi
 ## start backup of the source files
 # call copy for each source file
 for item in "$source_dir"/*; do
-
 
 	base_item=$(basename "$item")
 
@@ -319,4 +321,4 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
 	done
 fi
 
-end_print 0
+end_print

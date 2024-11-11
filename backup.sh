@@ -62,10 +62,14 @@ if [[ $hasExclude == 1 ]];then
 	fi
 fi
 
-source_dir="$1"
-backup_dir="$2"
-source_dir="${source_dir//\"/}"
-backup_dir="${backup_dir//\"/}"
+source_dir=$(realpath "$1")
+backup_dir=$(realpath "$2")
+
+
+if [[ "$backup_dir" == "$source_dir"* ]]; then
+  echo "[ERROR] $backup_dir is inside $source_dir"
+  exit 1
+fi
 
 
 if [[ "$source_dir" != /* &&  "$source_dir" != ./* ]]; then
