@@ -63,8 +63,15 @@ if [[ $hasExclude == 1 ]];then
 fi
 
 source_dir=$(realpath "$1")
+if [ $? -ne 0 ]; then
+    echo "Can't resolve source directory path"
+    end_print
+fi
 backup_dir=$(realpath "$2")
-
+if [ $? -ne 0 ]; then
+    echo "Can't resolver backup directory path"
+    end_print
+fi
 
 if [[ "$backup_dir" == "$source_dir"* ]]; then
   echo "[ERROR] $backup_dir is inside $source_dir"
