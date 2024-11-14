@@ -115,8 +115,8 @@ copyFile(){
             if [[ $? -eq 0 ]]; then
 
                 if [[ $copy -eq 1 ]]; then
-                    	cp -a "$file" "$destination"
-                		echo "cp -a $file $destination/$fileName"
+                    cp -a "$file" "$destination"
+                	echo "cp -a $file $destination/$fileName"
 					if [[ $? -ne 0 ]]; then
 						((cError++))
 						return 1
@@ -265,11 +265,11 @@ for item in "$source_dir"/*; do
 	if [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then
 			if [ "$checking" == "1" ];then
-			findElement ${exclude_list[@]} "$base_item"
-			if [[ $? -eq 0 ]];then
-        			continue
-    			fi
-				copyFile 1 "$item" "$backup_dir"
+    			findElement ${exclude_list[@]} "$base_item"
+    			if [[ $? -eq 0 ]];then
+         			continue
+                fi
+                copyFile 1 "$item" "$backup_dir"
 			else
 				copyFile "$item" "$backup_dir"
 			fi
