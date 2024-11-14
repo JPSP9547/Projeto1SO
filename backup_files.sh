@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s dotglob
+
 ######### Variabes
 
 checking=""
@@ -9,93 +11,15 @@ source_dir=""
 backup_dir=""
 
 
+function_call="$0"
+SCRIPT_DIR="$(dirname "$(realpath "$function_call")")"
+DIR="$SCRIPT_DIR/functionsReal"
 
-########### FUNCTIONS
-usage(){
-	echo "[SHOULD BE] ./backup.sh [-c] dir_source dir_backup"
-	exit 1
-}
-
-compModDate(){
-	# Functions has two parameters
-	# arg1 is the source_dir file
-	# arg2 is the backup_dir file
-	# RETURN: returns 0 if arg1 last modification was after arg2 last modification
-	# RETURN: return 1 otherwise
-	# FUCNTIONS ASSUMES THAT ARG1 and ARG2 exists
-
-	local file1="$1"
-	local file2="$2"
-
-	if [[ "$file1" -nt "$file2" ]];then
-		return 0	
-    elif [[ "$file2" -nt "$file1" ]];then
-        echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
-        return 1
-    else
-        return 1 #if dates are equal it will not copy the file
-    fi	
-}
-
-copyFile(){
-    	#function has 3 arguments
-    	#argument1 : absolute path of file to be copied
-     	#argument2 : absolute path of directory where file will be copied
-    	#argument3 : -c
-        #function checks dates of files and only copies if source file is newer than backed files
-        #FUNCTION ASSUMES ARGUMENT1 IS NOT A DIRECTORY
-
-        if [[ $# == 2 ]]; then
-            
-            file=$1
-            destination=$2
-            copy=1
-        elif [[ $# == 3 ]]; then
-            
-            file=$2
-            destination=$3
-            copy=0
-
-        else
-            echo "Bad use of function copyFile"
-        fi
-
-	  file="$(echo $file | tr -s '/')"
-        fileName="$(echo $file | tr "/" " " | awk '{print $NF}')"    
-        
-        if [[ -f "$destination/$fileName" ]]; then
-            compModDate $file "$destination/$fileName"
-
-            if [[ $? -eq 0 ]]; then
-
-                if [[ $copy -eq 1 ]]; then
-                    cp -a $file $destination
-                    return 0
-
-                fi
-
-                echo "cp -a $file $destination/$fileName"
-		    	return 0
-
-			
-	    else
-                return 1
-
-            fi
-
-        else
-
-            if [[ $copy -eq 1 ]]; then
-                cp -a $file $destination
-            fi
-
-            echo "cp -a $file $destination/$fileName"
-            return 0
-
-        fi
-}
-
-
+for file in "$DIR"/*; do
+    if [[ -f "$file" ]]; then
+        source "$file"
+    fi
+done
 
 
 ########### MAIN
@@ -109,7 +33,7 @@ fi
 while getopts ":cb:r:" op; do
     case $op in
 	c)
-            echo "checking activated"
+        echo "checking activated"
 		checking=1
 	;;
 	*)		
