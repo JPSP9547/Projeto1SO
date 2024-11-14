@@ -64,21 +64,21 @@ if [[ "$backup_dir" != /* ]]; then
 fi
 
 # removes last bar(/) from backup_dir path (for formatting reasons)
-if [[ $souce_dir == */ ]]; then
+if [[ "$souce_dir" == */ ]]; then
     source_dir="${source_dir:0:-1}" 
 fi
 
-if [[ $backup_dir == */ ]]; then
+if [[ "$backup_dir" == */ ]]; then
     backup_dir="${backup_dir:0:-1}"
 fi
 
 # validate source directory
-if [ ! -d $source_dir ]; then
+if [ ! -d "$source_dir" ]; then
 	nfound "source" "$source_dir"
 fi
 
 # backup directory
-if [ ! -d $backup_dir ];then
+if [ ! -d "$backup_dir" ];then
 	if [ -z "$checking" ];then
 		mkdir "$backup_dir"
                     
