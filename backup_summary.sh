@@ -271,7 +271,7 @@ for item in "$source_dir"/*; do
 
 			#echo $command
 			output="$(eval "$function_call $params")"
-			echo "$output" | grep -E '^(cp|mkdir|While)'
+			echo "$output" | grep -E '^(cp|mkdir|rm|While)'
 
 			last_line="${output##*$'\n'}"
 			res=($last_line)

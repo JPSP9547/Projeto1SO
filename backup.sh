@@ -153,7 +153,7 @@ for item in "$source_dir"/*; do
 			output="$(eval "$function_call $params")"
 
 			# prints every cp and mkdir statement
-			echo "$output" | grep -E '^(cp|mkdir)'
+			echo "$output" | grep -E '^(cp|mkdir|rm)'
 
 		fi
 	fi
