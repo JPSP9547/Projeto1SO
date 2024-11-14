@@ -135,33 +135,33 @@ for item in "$source_dir"/*; do
 
 
 	base_item=$(basename "$item")
+	
+	if [[ -d $item ]];then
+		new_backup_dir="$backup_dir/$(basename "$base_item")"
+		if [[ "$checking" -eq 1 ]]; then
+		    params=" -c -z \"$item\" \"$new_backup_dir\""
+		else
+			params="-z \"$item\" \"$new_backup_dir\""
+		fi
 
-	if [[ $base_item =~ $regx ]]; then
+		#echo $command
+		output="$(eval "$function_call $params")"
+
+		# prints every cp and mkdir statement
+		echo "$output" | grep -E '^(cp|mkdir|rm)'
+	
+	elif [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then
 
 			findElement ${exclude_list[@]} "$base_item"
 			if [[ $? -eq 0 ]];then
-        			continue
-           fi
+        	   continue
+            fi
 			if [ "$checking" == "1" ];then
 				copyFile 1 "$item" "$backup_dir"
 			else
 				copyFile "$item" "$backup_dir"
 			fi
-		elif [[ -d $item ]];then
-			new_backup_dir="$backup_dir/$(basename "$base_item")"
-			if [[ "$checking" -eq 1 ]]; then
-			    params=" -c -z \"$item\" \"$new_backup_dir\""
-			else
-				params="-z \"$item\" \"$new_backup_dir\""
-			fi
-
-			#echo $command
-			output="$(eval "$function_call $params")"
-
-			# prints every cp and mkdir statement
-			echo "$output" | grep -E '^(cp|mkdir|rm)'
-
 		fi
 	fi
 

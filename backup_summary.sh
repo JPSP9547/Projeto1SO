@@ -261,8 +261,32 @@ for item in "$source_dir"/*; do
 	if [[ "${exclude_list[*]}" == *"$base_item"* ]]; then
         continue
     fi
+    
+    if [[ -d $item ]];then
+        new_backup_dir="$backup_dir/$(basename "$base_item")"
 
-	if [[ $base_item =~ $regx ]]; then
+		if [[ "$checking" -eq 1 ]]; then
+			params="-c -z \"$item\" \"$new_backup_dir\""
+		else
+			params=" -z \"$item\" \"$new_backup_dir\""
+		fi
+
+		#echo $command
+		output="$(eval "$function_call $params")"
+		echo "$output" | grep -E '^(cp|mkdir|rm|While)'
+
+		last_line="${output##*$'\n'}"
+		res=($last_line)
+
+		cError=$((cError + res[0]))
+		cWarnings=$((cWarnings + res[1]))
+		cUpdated=$((cUpdated + res[2]))
+		cCopied=$((cCopied + res[3]))
+		sizeCopied=$((sizeCopied + res[4]))
+		cDeleted=$((cDeleted + res[5]))
+		sizeDeleted=$((sizeDeleted + res[6]))
+
+	elif [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then
 			if [ "$checking" == "1" ];then
     			findElement ${exclude_list[@]} "$base_item"
@@ -273,30 +297,6 @@ for item in "$source_dir"/*; do
 			else
 				copyFile "$item" "$backup_dir"
 			fi
-		elif [[ -d $item ]];then
-			new_backup_dir="$backup_dir/$(basename "$base_item")"
-
-			if [[ "$checking" -eq 1 ]]; then
-				params="-c -z \"$item\" \"$new_backup_dir\""
-			else
-				params=" -z \"$item\" \"$new_backup_dir\""
-			fi
-
-			#echo $command
-			output="$(eval "$function_call $params")"
-			echo "$output" | grep -E '^(cp|mkdir|rm|While)'
-
-			last_line="${output##*$'\n'}"
-			res=($last_line)
-
-			cError=$((cError + res[0]))
-			cWarnings=$((cWarnings + res[1]))
-			cUpdated=$((cUpdated + res[2]))
-			cCopied=$((cCopied + res[3]))
-			sizeCopied=$((sizeCopied + res[4]))
-			cDeleted=$((cDeleted + res[5]))
-			sizeDeleted=$((sizeDeleted + res[6]))
-
 		fi
 	fi
 
