@@ -26,6 +26,20 @@ sizeCopied=0
 sizeDeleted=0
 
 ########### FUNCTIONS
+findElement(){
+	#FUNCTIONS NEEDS 2 params
+	# $1 is the array
+	# $2 is the element to search
+	args=($@)
+	lst=(${args[@]::${#args[@]}-1})
+	toFind=${args[@]: -1}
+	for i in "$lst";do
+  		if [[ $i == "$toFind" ]];then
+    			return 0
+  		fi
+	done
+	return 1
+}
 
 
 usage(){
@@ -295,10 +309,20 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
     	filename=$(basename "$file")
     	if [[ ! -e "$source_dir/$filename" ]]; then
 
+            if [ -d "$file" ]; then
+                num_files=$(find "$file" -type f | wc -l)
+                dir_size=$(du -sb "$file" | cut -f1)
+                ((cDeleted += num_files))
+                ((sizeDeleted += dir_size))
+            else
+                file_size=$(stat --format=%s "$file")
+                ((sizeDeleted += file_size))
+                ((cDeleted++))
+            fi
 			if [ -z "$checking" ];then
-	    			rm "$file"
+	    			rm -r "$file"
 			fi
-			((cDeleted++))
+
 
     	fi
 	done

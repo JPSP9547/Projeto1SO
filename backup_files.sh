@@ -108,7 +108,7 @@ if [ ! -z "$(ls -A "$backup_dir")" ]; then
     		filename=$(basename "$file")
     		if [[ ! -e "$source_dir/$filename" ]]; then
 				if [ -z "$checking" ];then
-						rm "$file"
+						rm -r "$file"
 				fi
 
     		fi

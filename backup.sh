@@ -175,7 +175,7 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
     	if [[ ! -e "$source_dir/$filename" ]]; then
 
 			if [ -z "$checking" ];then
-	    			rm "$file"
+	    			rm -r "$file"
 			fi
 
     	fi
