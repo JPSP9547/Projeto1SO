@@ -5,8 +5,6 @@ shopt -s dotglob
 ######### Variabes
 
 checking=""
-filter=""
-exclude_file=""
 source_dir=""
 backup_dir=""
 
@@ -20,6 +18,13 @@ for file in "$DIR"/*; do
         source "$file"
     fi
 done
+
+usage(){
+	if [[ "$is_recursive" -eq 0 ]];then
+		echo "[USAGE] ./backup.sh [-c] dir_source dir_backup"
+	fi
+	exit 1
+}
 
 
 ########### MAIN
@@ -102,7 +107,6 @@ if [ ! -z "$(ls -A "$backup_dir")" ]; then
 	for file in "$backup_dir"/*; do
     		filename=$(basename "$file")
     		if [[ ! -e "$source_dir/$filename" ]]; then
-
 				if [ -z "$checking" ];then
 						rm "$file"
 				fi
