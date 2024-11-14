@@ -1,0 +1,102 @@
+body {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12px;
+}
+
+.page-break {
+  page-break-before: always;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;  /* Headers will keep their default or inherited size */
+}
+/* Exemplo de estilo para um código personalizado */
+.code-snippet {
+    background-color: #f5f5f5;
+    border-left: 5px solid #007acc;
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Estilo para o código de script (como bash ou shell) */
+.code-block {
+    background-color: #ffffff; /* Cor de fundo branca */
+    color: #333333; /* Texto escuro para boa legibilidade */
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    white-space: pre-wrap; /* Permite que o texto com quebras de linha se ajuste dentro da área */
+    word-wrap: break-word;
+    border: 1px solid #e0e0e0; /* Adiciona uma borda suave para destacar o bloco de código */
+}
+
+/* Estilo específico para arrays e variáveis de tipo array */
+.code-block .array {
+    color: #98c379; /* Cor verde suave para arrays */
+    font-weight: bold;
+}
+
+/* Estilo para os comentários dentro do código */
+.code-block .comment {
+    color: #7f848e; /* Cor cinza para os comentários */
+    font-style: italic;
+}
+
+/* Estilo para variáveis gerais (como $args, $exclude_list) */
+.code-block .variable {
+    color: #e06c75; /* Cor vermelha para variáveis */
+    font-weight: bold;
+}
+
+/* Estilo para números inteiros */
+.code-block .integer {
+    color: #d19a66; /* Cor laranja para inteiros */
+}
+
+/* Estilo para as funções (como 'findElement', 'copyFile') */
+.code-block .function {
+    color: #61afef; /* Cor azul clara para as funções */
+    font-style: italic;
+}
+
+/* Estilo para palavras-chave do Bash, como 'if', 'else', 'for' */
+.code-block .keyword {
+    color: #c678dd; /* Cor roxa para palavras-chave */
+    font-weight: bold;
+}
+
+/* Cabeçalhos de pseudocódigo */
+.code-block-header {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #2c3e50; /* Cor escura para os cabeçalhos */
+}
+
+/* Estilo para as entradas no pseudocódigo */
+.code-block-entrada {
+    color: #2980b9; /* Cor azul para entradas */
+    font-weight: bold;
+}
+
+/* Estilo para as etapas do processo no pseudocódigo */
+.code-block-processo {
+    color: #27ae60; /* Cor verde para o processo */
+    font-weight: normal;
+}
+
+/* Estilo para os blocos de decisão ou retorno */
+.code-block-decisao {
+    color: #e74c3c; /* Cor vermelha para decisões ou retornos */
+}
+
+/* Ajustes para listas dentro do pseudocódigo */
+ul {
+    margin: 0;
+    padding-left: 20px;
+    margin-bottom: 1px; /* Diminui o espaço entre as listas */
+}
+
+ul li {
+    margin-bottom: 1px; /* Diminui o espaço entre os itens da lista */
+}
