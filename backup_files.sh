@@ -41,7 +41,7 @@ while getopts ":cb:r:" op; do
         echo "checking activated"
 		checking=1
 	;;
-	*)		
+	*)
 		usage
 	;;
     esac
@@ -65,7 +65,7 @@ fi
 
 # removes last bar(/) from backup_dir path (for formatting reasons)
 if [[ "$souce_dir" == */ ]]; then
-    source_dir="${source_dir:0:-1}" 
+    source_dir="${source_dir:0:-1}"
 fi
 
 if [[ "$backup_dir" == */ ]]; then
@@ -81,7 +81,7 @@ fi
 if [ ! -d "$backup_dir" ];then
 	if [ -z "$checking" ];then
 		mkdir "$backup_dir"
-                    
+
 	fi
 	echo "mkdir $backup_dir"
 fi
@@ -90,7 +90,7 @@ fi
 ## start backup of the source files
 # call copy for each source file
 for file in "$source_dir"/*; do
-    	
+
 	if [[ -f $file ]]; then  # make sure
 		if [ "$checking" == "1" ];then
 			copyFile 1 "$file" "$backup_dir"
@@ -102,8 +102,8 @@ for file in "$source_dir"/*; do
 done
 
 ## Remove files from backup_dir that are not on source_dir
-# Skip when backup dir is empty 
-if [ ! -z "$(ls -A "$backup_dir")" ]; then 
+# Skip when backup dir is empty
+if [[ -d "$backup_dir" && ! -z "$(ls -A "$backup_dir")" ]]; then
 	for file in "$backup_dir"/*; do
     		filename=$(basename "$file")
     		if [[ ! -e "$source_dir/$filename" ]]; then
@@ -115,6 +115,3 @@ if [ ! -z "$(ls -A "$backup_dir")" ]; then
     		fi
 	done
 fi
-
-
-

@@ -205,14 +205,14 @@ backup_dir="$2"
 
 
 source_dir=$(realpath "$1")
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
     echo "Can't resolve source directory path"
     end_print
 fi
 
-if [ "$checking" -eq 0 ]; then
+if [[ "$checking" -eq 0 ]]; then
     backup_dir=$(realpath "$2")
-    if [ $? -ne 0 ]; then
+    if [[ç $? -ne 0 ]]; then
         echo "Can't resolver backup directory path"
         end_print
     fi
@@ -245,6 +245,7 @@ if [ ! -d "$backup_dir" ];then
 		mkdir -p "$backup_dir"
 		if [[ $? -ne 0 ]]; then
 			((cError++))
+			echo "[ERROR] could not create directory $backup_sir"
 			end_print
 		fi
 	fi
@@ -329,8 +330,6 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
 	    			rm -r "$file"
                     echo "rm -r $file"
 			fi
-
-
     	fi
 	done
 fi

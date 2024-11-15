@@ -70,15 +70,15 @@ fi
 
 # resolve source_dir
 source_dir=$(realpath "$1")
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
     echo "Can't resolve source directory path"
     exit 1
 fi
 
 # resolve backup_dir avoiding erros
-if [ "$checking" -eq 0 ]; then
+if [[ "$checking" -eq 0 ]]; then
     backup_dir=$(realpath "$2")
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo "Can't resolver backup directory path"
         end_print
     fi
