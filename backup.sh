@@ -27,10 +27,9 @@ exclude_file=""
 source_dir=""
 backup_dir=""
 is_recursive=0
-exclude_file=""
+exclude_file="/"
 regx=".*"
 hasExclude=0
-
 
 # get options/flags
 while getopts ":czb:r:" op; do
@@ -40,15 +39,17 @@ while getopts ":czb:r:" op; do
 		checking=1
 	;;
 	b)
-		exclude_file="$OPTARG"
-		hasExclude=1
+		exclude_file="$(realpath "$OPTARG")"
+		if [[ -f "$exclude_file" ]];then
+		  hasExclude=1
+		fi
 	;;
 	r)
 		regx="$OPTARG"
-		hasRegx=1
 	;;
 	z)
-		is_recursive=1
+
+	   is_recursive=1
 	;;
 	*)
 		usage
@@ -58,8 +59,6 @@ done
 
 shift $((OPTIND-1))
 if [[ $# -ne 2 ]]; then
-echo $2
-echo $@
     usage
 fi
 
@@ -69,15 +68,32 @@ if [[ $hasExclude == 1 ]];then
 	fi
 fi
 
+# resolve source_dir
 source_dir=$(realpath "$1")
 if [ $? -ne 0 ]; then
     echo "Can't resolve source directory path"
     exit 1
 fi
-backup_dir=$(realpath "$2")
-if [ $? -ne 0 ]; then
-    echo "Can't resolver backup directory path"
-    exit 1
+
+# resolve backup_dir avoiding erros
+if [ "$checking" -eq 1 ]; then
+
+    if [[ "$backup_dir" =~ ^/ ]]; then
+        :
+    else
+        backup_dir="$(pwd)/$backup_dir"
+    fi
+else
+    backup_dir=$(realpath "$backup_dir")
+    if [ $? -ne 0 ]; then
+        echo "Can't resolve backup directory path"
+        end_print
+    fi
+fi
+
+if [[ "$backup_dir" == "$source_dir"* ]]; then
+  echo "[ERROR] $backup_dir is inside $source_dir"
+  end_print
 fi
 
 if [[ "$backup_dir" == "$source_dir"* ]]; then
@@ -135,13 +151,13 @@ for item in "$source_dir"/*; do
 
 
 	base_item=$(basename "$item")
-	
+
 	if [[ -d $item ]];then
 		new_backup_dir="$backup_dir/$(basename "$base_item")"
 		if [[ "$checking" -eq 1 ]]; then
-		    params=" -c -z \"$item\" \"$new_backup_dir\""
+		    params=" -c -z -r \"$regx\" -b \"$exclude_file\" \"$item\" \"$new_backup_dir\""
 		else
-			params="-z \"$item\" \"$new_backup_dir\""
+			params="-z -r \"$regx\" -b \"$exclude_file\" \"$item\" \"$new_backup_dir\""
 		fi
 
 		#echo $command
@@ -149,7 +165,7 @@ for item in "$source_dir"/*; do
 
 		# prints every cp and mkdir statement
 		echo "$output" | grep -E '^(cp|mkdir|rm)'
-	
+
 	elif [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then
 
@@ -176,7 +192,7 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
 
 			if [ -z "$checking" ];then
 	    			rm -r "$file"
-                    echo "rm -r $file"
+					echo "rm -r $file"
 			fi
 
     	fi

@@ -10,7 +10,7 @@ exclude_file=""
 source_dir=""
 backup_dir=""
 is_recursive=0
-exclude_file=""
+exclude_file="/"
 regx=".*"
 hasExclude=0
 
@@ -171,8 +171,10 @@ while getopts ":czb:r:" op; do
 		checking=1
 	;;
 	b)
-		exclude_file="$OPTARG"
-		hasExclude=1
+    	exclude_file="$(realpath "$OPTARG")"
+    	if [[ -f "$exclude_file" ]];then
+    	  hasExclude=1
+    	fi
 	;;
 	r)
 		regx="$OPTARG"
@@ -201,15 +203,26 @@ fi
 source_dir="$1"
 backup_dir="$2"
 
+
 source_dir=$(realpath "$1")
 if [ $? -ne 0 ]; then
     echo "Can't resolve source directory path"
     end_print
 fi
-backup_dir=$(realpath "$2")
-if [ $? -ne 0 ]; then
-    echo "Can't resolver backup directory path"
-    end_print
+
+if [ "$checking" -eq 1 ]; then
+
+    if [[ "$backup_dir" =~ ^/ ]]; then
+        :
+    else
+        backup_dir="$(pwd)/$backup_dir"
+    fi
+else
+    backup_dir=$(realpath "$backup_dir")
+    if [ $? -ne 0 ]; then
+        echo "Can't resolve backup directory path"
+        end_print
+    fi
 fi
 
 if [[ "$backup_dir" == "$source_dir"* ]]; then
@@ -261,14 +274,14 @@ for item in "$source_dir"/*; do
 	if [[ "${exclude_list[*]}" == *"$base_item"* ]]; then
         continue
     fi
-    
+
     if [[ -d $item ]];then
         new_backup_dir="$backup_dir/$(basename "$base_item")"
 
 		if [[ "$checking" -eq 1 ]]; then
-			params="-c -z \"$item\" \"$new_backup_dir\""
+			params="-c -z -r \"$regx\" -b \"$exclude_file\" \"$item\" \"$new_backup_dir\""
 		else
-			params=" -z \"$item\" \"$new_backup_dir\""
+			params=" -z -r \"$regx\" -b \"$exclude_file\" \"$item\" \"$new_backup_dir\""
 		fi
 
 		#echo $command
@@ -321,7 +334,6 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
             fi
 			if [ -z "$checking" ];then
 	    			rm -r "$file"
-                    echo "rm -r $fil
                     echo "rm -r $file"
 			fi
 
