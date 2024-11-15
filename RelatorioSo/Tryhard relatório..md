@@ -2,255 +2,22 @@
 
 Este projeto foi realizado no âmbito da disciplina de Sistemas Operativos cujo objetivo foi a criação de 3 scripts para criação e atualização de cópias de segurança.
 
-O backup_files.sh tem o objetivo de criar e/ou atualizar uma cópia de segurança em que se assume que não existem diretórios. O backup.sh tem o mesmo objetivo do backup_files.sh, mas neste já se assume a possibilidade da existência de diretórios. O backup_summary.sh é similar ao backup.sh, mas este tem informação sobre quantos ficheiros foram copiados/eliminados e sobre o espaço que esses mesmos ficheiros ocupavam. O backup_check.sh serve para avaliar se os ficheiros na diretoria que foi copiada são iguais aos da diretoria que contém a sua cópia de segurança.  
+- O backup_files.sh tem o objetivo de criar e/ou atualizar uma cópia de segurança em que se assume que não existem diretórios. 
+- O backup.sh tem o mesmo objetivo do backup_files.sh, mas neste já se assume a possibilidade da existência de diretórios. 
+- O backup_summary.sh é similar ao backup.sh, mas este tem informação sobre quantos ficheiros foram copiados/eliminados e sobre o espaço que esses mesmos ficheiros ocupavam. 
+- O backup_check.sh serve para avaliar se os ficheiros na diretoria que foi copiada são iguais aos da diretoria que contém a sua cópia de segurança.  
 Todos os scripts escrevem no terminal as operações de cópias ou de eliminação de ficheiros/diretorias que fizeram.
 
-Com isto podemos considerar que o script principal para alcançar o objetivo de fazer cópias de segurança é o backup_summary que apresenta todas as funcionalidades necessárias.
+O desenvolvimento do ficheiros de backup foi proguessivo, logo no <b>backup_summary.sh</b> constam todas as funcionalidades dos outros.
 
-<div class="page-break"></div>
-<div class="page-break"></div>
-<div class="page-break"></div>
-<div class="page-break"></div>
-<h1>Ficheiros Principais</h1>
+**Testes?** 
 
-Todos os scripts têm 2 argumentos obrigatórios, sendo o primeiro deles a diretoria que vai ser copiada e o segundo a diretoria para onde a cópia deverá ir.
+Para testar os scripts, iremos testar uma cópia em que a pasta destino está vazia, uma cópia em que a pasta destino tem alguns dos arquivos da pasta source, uma cópia em que a pasta destino tem arquivos que não pertencem à pasta source e vamos testar uma cópia em que a pasta destino tem os mesmos arquivos da pasta source mas alguns foram modificados.
 
-<h5>backup_files.sh</h5>
-O objetivo do código é realizar um backup de arquivos de um diretório de origem para um diretório de backup, podendo incluir a opção de verificar se os arquivos precisam ser copiados (modo de verificação) ou realmente realizar a cópia. Também garante que arquivos no diretório de backup que não existam mais no diretório de origem sejam removidos.
-Para além dos parametros obrigatórios o script tem um parametro opcional:
--c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
+Também iremos testar pastas com ficheiros escondidos e com espaços nos nomes.
 
-<b>Etapas:</b>
+Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses parâmetros.
 
-- Importar funções
-<div class = "code-block">
-<pre>
-function_call="$0" <span class = "comment"># Usa-se o function_call para determinar o caminho de acesso às funções</span>
-SCRIPT_DIR="$(dirname "$(realpath "$function_call")")"
-DIR="$SCRIPT_DIR/functionsReal"
-for file in "$DIR"/*; do
-    if [[ -f "$file" ]]; then
-        source "$file"
-    fi
-done
-</pre>
-</div>
-
-- Declaração de variáveis
-<div class ="code-block">
-<pre>
-checking=""
-source_dir=""
-backup_dir=""
-</pre>
-</div>
-
-- Ler as opções do usuário e processar as diferentes possiblidades.
-<div class ="code-block">
-<pre>
-while getopts ":c:" op; do
-    case $op in
-	...
-	esac
-done
-</pre>
-</div>
-
-- Validar os diretórios ( e lidar com o possível erro do <b>realpath</b> )
-<div class ="code-block">
-<pre>
-source_dir=$(realpath "$1")
-if [ $? -ne 0 ]; then
-    echo "Can't resolve source directory path"
-    exit 1
-fi
-backup_dir=$(realpath "$2")
-if [ $? -ne 0 ]; then
-    ...
-fi
-if [[ "$backup_dir" == "$source_dir"* ]]; then
-  echo "[ERROR] $backup_dir is inside $source_dir"
-  exit 1
-fi
-</pre>
-</div>
-
-- Criar o diretório backup caso necessário
-<div class ="code-block">
-<pre>
-Se backup_dir não existe então
-	criar backup_dir
-fim se
-</pre>
-</div>
-
-- Copiar cada ficheiro
-<div class ="code-block">
-<pre>
-Para cada elemento de source_dir
-	se é um ficheiro
-		chamar <b>copy_file( elemento, backup_dir )</b>
-	fim se
-fim para
-</pre>
-</div>
-
-- Remover elementos do backup_dir que não fazem parte do source_dir
-<div class ="code-block">
-<pre>
-Para cada elemento de backup_dir
-	se elemento não existe no source_dir
-		<b>remover</b> elemento
-	fim se
-fim para
-</pre>
-</div>
-
-
-<h5>backup.sh</h5> O objetivo deste script é realizar um backup de arquivos e sub-diretórios de um diretório de origem para um diretório de backup, com opções de verificação, exclusão de arquivos, filtro por expressão regular. 
- -c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
-
--b [file], com este parametro o script irá ignorar os ficheiros cujo nome estão no ficheiro file
-
--r [regex_expression], com este parametro o script irá ignorar os ficheiros cujo nome se inclui na expressão regex [regex-expression]
-
-<b>A seguir só as etapas que diferem do backup_files.sh:</b>
-- Inicializar variáveis
-<div class ="code-block">
-<pre>
-...
-filter=""
-is_recursive=0
-regx=".*" 
-hasExclude=0
-...
-</pre>
-</div>
-- Leitura de Opções/Flags 
-<div class="code-block"> 
-<pre> 
-<span class="comment" ># a option <b>z</b> recursividade e não deve ser usada pelo usuário</span>
-while getopts ":czb:r:" op; do 
-	 case $op in # Processar as opções 
-	...
-esac 
-done 
-</pre> 
-</div>
-
-- Carregar Arquivo de Exclusões
-<div class="code-block"> 
-<pre> 
-if [ -f "$exclude_file" ]; then 
-	mapfile -t exclude_list  "$exclude_file" 
-else exclude_list=()
-fi 
-</pre>
-</div>
-
-- Iniciar o backup dos arquivos
-<div class="code-block"> 
-<pre> 
-<b>Para</b> cada item no diretório de origem: 
-	Obter o nome base do item (sem o caminho) 
-	Se o item corresponder à expressão regular fornecida: 
-		Se o item for um arquivo e não estiver na lista de exclusões: 
-			Se o modo de verificação estiver ativado: 
-				Realizar a verificação (sem copiar o arquivo) 
-			Caso contrário: 
-				 Copiar o arquivo para o diretório de backup 
-			Se o item for um diretório e o backup for recursivo: 
-				Realizar o backup recursivo para o diretório 
-Fim para
-</pre>
-</div>
-
-
-<h5>backup_summary.sh</h5>
-O objetivo deste script é realizar o backup de arquivos e subdiretórios de um diretório de origem para um diretório de backup, com opções de verificação, exclusão de arquivos, e a contagem e exibição de estatísticas detalhadas sobre o processo de backup.
- -c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
-
--b [file], com este parametro o script irá ignorar os ficheiros cujo nome estão no ficheiro file
-
--r [regex_expression], com este parametro o script irá ignorar os ficheiros cujo nome se inclui na expressão regex [regex-expression]
-
-<b>A seguir só as etapas que diferem do backup.sh:</b>
-- Inicialização de variáveis
-<div class ="code-block">
-<pre>
-...
-<span class = "comment"># Contadores de status </span>
-cError=0 
-cWarnings=0 
-cUpdated=0 
-cCopied=0 
-cDeleted=0
-<span class="comment"># Tamanho dos arquivos copiados e excluídos</span> 
-sizeCopied=0 
-sizeDeleted=0
-...
-</pre>
-</div>
-
-- Exibir estatisticas finais
-<div class="code-block"> 
-<pre> 
-<span class = "comment"># Exibir estatísticas detalhadas sobre o backup </span>
-se modo recursivo: 
-	exibir erro, aviso, arquivos copiados, excluídos, etc. 
-senão: 
-	exibir resumo final com o total de erros, avisos, arquivos copiados, deletados fim
-</pre> 
-</div>
-
-- Neste código, após cada <b>cp</b> e <b>rm</b> as variáveis de contagem e tamanho são alterados
-
-<div class="code-block"> 
-<pre> 
-...
-cp -a "$file" "$destination"
-if [[ $? -ne 0 ]]; then
-	<b>((cError++))</b>
-	return 1
-else
-	file_size=$(stat -c %s "$file")
-	<b>((cCopied++))</b>
-	sizeCopied=$((sizeCopied + file_size))
-	return 0
-fi
-...
-if [ -d "$file" ]; then
-	num_files=$(find "$file" -type f | wc -l)
-	dir_size=$(du -sb "$file" | cut -f1)
-	<b>((cDeleted += num_files))</b>
-    <b>((sizeDeleted += dir_size))</b>
-else
-    file_size=$(stat --format=%s "$file")
-    <b>((sizeDeleted += file_size))</b>
-    <b>((cDeleted++))</b>
-fi
-if [ -z "$checking" ];then
-	rm -r "$file"
-fi
-...
-</pre> 
-</div>
-
-- Após as chamadas as variáveis são atualizadas
-<div class = "code-block">
-<pre>
-...
-<span class = "comment" ># res é o output de parametros da chamada recursiva</span>
-cError=$((cError + res[0]))
-cWarnings=$((cWarnings + res[1]))
-cUpdated=$((cUpdated + res[2]))
-cCopied=$((cCopied + res[3]))
-sizeCopied=$((sizeCopied + res[4]))
-cDeleted=$((cDeleted + res[5]))
-sizeDeleted=$((sizeDeleted + res[6]))
-...
-</pre>
-</div>
 
 <div class="page-break"></div>
 <h1>Estruturas de dados</h1>
@@ -276,8 +43,10 @@ No Bash são tratadas como arrays de caracteres e são usadas para armazenar seq
   <span class="variable">exclude_file=""</span>  # <span class="comment">Arquivo contendo os arquivos a excluir</span>
 </div>
 
+
+
 <div class="page-break"></div>
-<h1>Como dividimos o problema</h1>
+<h1>Como dividimos o problema (funções)</h1>
 
 <spam>O problema foi dividido de forma a torná-lo mais modular, visando a reutilização do código e facilitando a manutenção e a compreensão. Cada função desempenha um papel fundamental na execução do processo de backup. A seguir, iremos analisar as funções utilizadas e sua contribuição para a solução.</spam>
 
@@ -431,6 +200,304 @@ Execução:
 </div>
 
 <div class="page-break"></div>
+<h1>Ficheiros Principais</h1>
+
+Todos os scripts têm 2 argumentos obrigatórios, sendo o primeiro deles a diretoria que vai ser copiada e o segundo a diretoria para onde a cópia deverá ir.
+
+<h3>backup_files.sh</h3>
+O objetivo do código é realizar um backup de arquivos de um diretório de origem para um diretório de backup, podendo incluir a opção de verificar se os arquivos precisam ser copiados (modo de verificação) ou realmente realizar a cópia. Também garante que arquivos no diretório de backup que não existam mais no diretório de origem sejam removidos.
+Para além dos parametros obrigatórios o script tem um parametro opcional:
+-c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
+
+<b>Etapas:</b>
+
+- Importar funções
+<div class = "code-block">
+<pre>
+function_call="$0" <span class = "comment"># Usa-se o function_call para determinar o caminho de acesso às funções</span>
+SCRIPT_DIR="$(dirname "$(realpath "$function_call")")"
+DIR="$SCRIPT_DIR/functionsReal"
+for file in "$DIR"/*; do
+    if [[ -f "$file" ]]; then
+        source "$file"
+    fi
+done
+</pre>
+</div>
+
+- Declaração de variáveis
+<div class ="code-block">
+<pre>
+checking=""
+source_dir=""
+backup_dir=""
+</pre>
+</div>
+
+- Ler as opções do usuário e processar as diferentes possiblidades.
+<div class ="code-block">
+<pre>
+while getopts ":c:" op; do
+    case $op in
+	...
+	esac
+done
+</pre>
+</div>
+
+- Validar os diretórios ( e lidar com o possível erro do <b>realpath</b> )
+<div class ="code-block">
+<pre>
+source_dir=$(realpath "$1")
+if [ $? -ne 0 ]; then
+    echo "Can't resolve source directory path"
+    exit 1
+fi
+backup_dir=$(realpath "$2")
+if [ $? -ne 0 ]; then
+    ...
+fi
+if [[ "$backup_dir" == "$source_dir"* ]]; then
+  echo "[ERROR] $backup_dir is inside $source_dir"
+  exit 1
+fi
+</pre>
+</div>
+
+- Criar o diretório backup caso necessário
+<div class ="code-block">
+<pre>
+Se backup_dir não existe então
+	criar backup_dir
+fim se
+</pre>
+</div>
+
+- Copiar cada ficheiro
+<div class ="code-block">
+<pre>
+Para cada elemento de source_dir
+	se é um ficheiro
+		chamar <b>copy_file( elemento, backup_dir )</b>
+	fim se
+fim para
+</pre>
+</div>
+
+- Remover elementos do backup_dir que não fazem parte do source_dir
+<div class ="code-block">
+<pre>
+Para cada elemento de backup_dir
+	se elemento não existe no source_dir
+		<b>remover</b> elemento
+	fim se
+fim para
+</pre>
+</div>
+
+<b>Testes</b>
+<small>Teste de cópia básica(foram copiados ficheiros para uma pasta vazia)</small>
+![[testeBasicoBackupFiles 1.png]]
+
+<small>Teste pastas com espaços</small>
+![[testeBasicoBackupFilesComEspaco 1.png]]
+
+<small>Teste cópia com todos os ficheiros já colocados na pasta destino e com a mesma data de alteração</small>
+![[testeBackupFilesTodosFicheirosIguais 1.png]]
+
+<small>Teste cópia em que existem ficheiros na pasta de destino que não existem na pasta que irá ser copiada</small>
+![[testeBackupFilesRemoveFiles 1.png]]
+
+<small>Teste cópia em que existem um ficheiro com data de alteração mais recente na pasta destino do que na pasta que vai ser copiada</small>
+
+![[newerFileInBackup 1.png]]
+
+<small>Teste do parametro -c</small>
+![[teste-c.png]]
+
+<small>Teste em que ambas as pastas têm os mesmos ficheiros, mas a pasta que vai ser copiada tem um arquivo que foi alterado</small>
+![[ficheiroMaisNovoNaSrc.png]]
+
+<div class="page-break"></div>
+<h3>backup.sh</h3> O objetivo deste script é realizar um backup de arquivos e sub-diretórios de um diretório de origem para um diretório de backup, com opções de verificação, exclusão de arquivos, filtro por expressão regular. 
+ -c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
+
+-b [file], com este parametro o script irá ignorar os ficheiros cujo nome estão no ficheiro file
+
+-r [regex_expression], com este parametro o script irá ignorar os ficheiros cujo nome se inclui na expressão regex [regex-expression]
+
+<b>A seguir só as etapas que diferem do backup_files.sh:</b>
+- Inicializar variáveis
+<div class ="code-block">
+<pre>
+...
+filter=""
+is_recursive=0
+regx=".*" 
+hasExclude=0
+...
+</pre>
+</div>
+- Leitura de Opções/Flags 
+<div class="code-block"> 
+<pre> 
+<span class="comment" ># a option <b>z</b> recursividade e não deve ser usada pelo usuário</span>
+while getopts ":czb:r:" op; do 
+	 case $op in # Processar as opções 
+	...
+esac 
+done 
+</pre> 
+</div>
+
+- Carregar Arquivo de Exclusões
+<div class="code-block"> 
+<pre> 
+if [ -f "$exclude_file" ]; then 
+	mapfile -t exclude_list  "$exclude_file" 
+else exclude_list=()
+fi 
+</pre>
+</div>
+
+- Iniciar o backup dos arquivos
+<div class="code-block"> 
+<pre> 
+<b>Para</b> cada item no diretório de origem: 
+	Obter o nome base do item (sem o caminho) 
+	Se o item corresponder à expressão regular fornecida: 
+		Se o item for um arquivo e não estiver na lista de exclusões: 
+			Se o modo de verificação estiver ativado: 
+				Realizar a verificação (sem copiar o arquivo) 
+			Caso contrário: 
+				 Copiar o arquivo para o diretório de backup 
+			Se o item for um diretório e o backup for recursivo: 
+				Realizar o backup recursivo para o diretório 
+Fim para
+</pre>
+</div>
+
+<b>Testes</b>
+<u>Backup.sh</u>
+<h1>TODO</h1>
+<b>testes para -b e -r</b>
+
+
+<small> Teste com pasta que existe na pasta destino mas que não existe na pasta que vai ser copiada</small>
+![[rmdir.png]]
+
+<small>Teste com pasta que  existe na pasta que vai ser copiada mas não existe na pasta destino</small>
+![[criarPasta.png]]
+
+<small>Teste com pastas escondidas</small>
+![[testeFicheirosEscondidos.png]]
+
+<small>Todos os testes que foram feitos para o backup_files.sh também foram feitos para este script com algumas adaptações(assumindo já a existência de pastas e de ficheiros lá dentro incluindo pastas com espaços)</small>
+
+<div class="page-break"></div>
+<h3>backup_summary.sh</h3>
+O objetivo deste script é realizar o backup de arquivos e subdiretórios de um diretório de origem para um diretório de backup, com opções de verificação, exclusão de arquivos, e a contagem e exibição de estatísticas detalhadas sobre o processo de backup.
+ -c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
+
+-b [file], com este parametro o script irá ignorar os ficheiros cujo nome estão no ficheiro file
+
+-r [regex_expression], com este parametro o script irá ignorar os ficheiros cujo nome se inclui na expressão regex [regex-expression]
+
+<b>A seguir só as etapas que diferem do backup.sh:</b>
+- Inicialização de variáveis
+<div class ="code-block">
+<pre>
+...
+<span class = "comment"># Contadores de status </span>
+cError=0 
+cWarnings=0 
+cUpdated=0 
+cCopied=0 
+cDeleted=0
+<span class="comment"># Tamanho dos arquivos copiados e excluídos</span> 
+sizeCopied=0 
+sizeDeleted=0
+...
+</pre>
+</div>
+
+- Exibir estatisticas finais
+<div class="code-block"> 
+<pre> 
+<span class = "comment"># Exibir estatísticas detalhadas sobre o backup </span>
+se modo recursivo: 
+	exibir erro, aviso, arquivos copiados, excluídos, etc. 
+senão: 
+	exibir resumo final com o total de erros, avisos, arquivos copiados, deletados fim
+</pre> 
+</div>
+
+- Neste código, após cada <b>cp</b> e <b>rm</b> as variáveis de contagem e tamanho são alterados
+
+<div class="code-block"> 
+<pre> 
+...
+cp -a "$file" "$destination"
+if [[ $? -ne 0 ]]; then
+	<b>((cError++))</b>
+	return 1
+else
+	file_size=$(stat -c %s "$file")
+	<b>((cCopied++))</b>
+	sizeCopied=$((sizeCopied + file_size))
+	return 0
+fi
+...
+if [ -d "$file" ]; then
+	num_files=$(find "$file" -type f | wc -l)
+	dir_size=$(du -sb "$file" | cut -f1)
+	<b>((cDeleted += num_files))</b>
+    <b>((sizeDeleted += dir_size))</b>
+else
+    file_size=$(stat --format=%s "$file")
+    <b>((sizeDeleted += file_size))</b>
+    <b>((cDeleted++))</b>
+fi
+if [ -z "$checking" ];then
+	rm -r "$file"
+fi
+...
+</pre> 
+</div>
+
+- Após as chamadas as variáveis são atualizadas
+<div class = "code-block">
+<pre>
+...
+<span class = "comment" ># res é o output de parametros da chamada recursiva</span>
+cError=$((cError + res[0]))
+cWarnings=$((cWarnings + res[1]))
+cUpdated=$((cUpdated + res[2]))
+cCopied=$((cCopied + res[3]))
+sizeCopied=$((sizeCopied + res[4]))
+cDeleted=$((cDeleted + res[5]))
+sizeDeleted=$((sizeDeleted + res[6]))
+...
+</pre>
+</div>
+
+<div class="page-break"></div>
+
+<b>Testes</b>
+<h1>TODO</h1>
+<b>testar</b>
+
+<div class="page-break"></div>
+
+<h3>Backup_check.sh</h3>
+<h1>TODO</h1>
+<b>fazer o mesmo que nos outros e aplicar os testes. usa a linha abaixo para quebra de página. A linha fica invisivel depois de tirares o mouse. </b>
+<b><u>div class="page-break"</u></b>
+
+
+
+
+<div class="page-break"></div>
 <h1>Como resolvemos certos problemas</h1>
 
 Durante o desenvolvimento, surgiram alguns desafios que puderam ser superados através de pesquisas.
@@ -536,61 +603,6 @@ sizeDeleted += res->sizeDeleted
 
 <b>[NOTA]</b> os contadores foram colocados a seguir a todas as funções <b><i>rm</i></b>, <b><i>cp</i></b>.
 
-<div class="page-break"></div>
-
-
-**Testes** 
-
-Para testar os scripts, iremos testar uma cópia em que a pasta destino está vazia, uma cópia em que a pasta destino tem alguns dos arquivos da pasta source, uma cópia em que a pasta destino tem arquivos que não pertencem à pasta source e vamos testar uma cópia em que a pasta destino tem os mesmos arquivos da pasta source mas alguns foram modificados.
-
-Também iremos testar pastas com ficheiros escondidos e com espaços nos nomes.
-
-Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses parâmetros.
-
-<u>Backup_files.sh</u>
-
-<small>Teste de cópia básica(foram copiados ficheiros para uma pasta vazia)</small>
-![[testeBasicoBackupFiles 1.png]]
-
-<small>Teste pastas com espaços</small>
-![[testeBasicoBackupFilesComEspaco 1.png]]
-
-<small>Teste cópia com todos os ficheiros já colocados na pasta destino e com a mesma data de alteração</small>
-![[testeBackupFilesTodosFicheirosIguais 1.png]]
-
-<small>Teste cópia em que existem ficheiros na pasta de destino que não existem na pasta que irá ser copiada</small>
-![[testeBackupFilesRemoveFiles 1.png]]
-
-<small>Teste cópia em que existem um ficheiro com data de alteração mais recente na pasta destino do que na pasta que vai ser copiada</small>
-
-![[newerFileInBackup 1.png]]
-
-<small>Teste do parametro -c</small>
-![[teste-c.png]]
-
-<small>Teste em que ambas as pastas têm os mesmos ficheiros, mas a pasta que vai ser copiada tem um arquivo que foi alterado</small>
-![[ficheiroMaisNovoNaSrc.png]]
-
-<u>Backup.sh</u>
-<small>Teste parametro -r (nao funciona por algum motivo)</small>
-
-<small>Teste paramentro -b(não funciona)</small>
-
-<small> Teste com pasta que existe na pasta destino mas que não existe na pasta que vai ser copiada</small>
-![[rmdir.png]]
-
-<small>Teste com pasta que  existe na pasta que vai ser copiada mas não existe na pasta destino</small>
-![[criarPasta.png]]
-
-<small>Teste com pastas escondidas</small>
-![[testeFicheirosEscondidos.png]]
-
-<small>Todos os testes que foram feitos para o backup_files.sh também foram feitos para este script com algumas adaptações(assumindo já a existência de pastas e de ficheiros lá dentro incluindo pastas com espaços)</small>
-
-<u>backup_check.sh</u>
-
-
-
 
 <div class="page-break"></div>
 <h1>Bibliografia</h1>
@@ -599,3 +611,4 @@ Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses 
 - Stack Overflow. (n.d.). _Stack Overflow: Where developers learn, share, & build careers_. Recuperado de [https://stackoverflow.com/](https://stackoverflow.com/)
 - GNU Project. (n.d.). _Bash manual_. Recuperado de (https://www.gnu.org/software/bash/manual/bash.html)
 - Linux Die. (n.d.). _Bash man page_. Recuperado de https://linux.die.net/man/1/bash
+
