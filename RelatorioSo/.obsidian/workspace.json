@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Tryhard relatório..md",
+                "file": "Tryhard relatório.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Tryhard relatório."
+              "title": "Tryhard relatório"
             }
           }
         ]
@@ -189,7 +189,7 @@
   "active": "c13266405b6ce212",
   "lastOpenFiles": [
     "Ficheiro completo.md",
-    "Tryhard relatório..md",
+    "Tryhard relatório.md",
     "testeFicheirosEscondidos.png",
     "criarPasta.png",
     "rmdir.png",

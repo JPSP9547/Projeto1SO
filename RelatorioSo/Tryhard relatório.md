@@ -1,5 +1,6 @@
 <h1>Introdução</h1>
 
+**Do que se trata?**
 Este projeto foi realizado no âmbito da disciplina de Sistemas Operativos cujo objetivo foi a criação de 3 scripts para criação e atualização de cópias de segurança.
 
 - O backup_files.sh tem o objetivo de criar e/ou atualizar uma cópia de segurança em que se assume que não existem diretórios. 
@@ -8,15 +9,26 @@ Este projeto foi realizado no âmbito da disciplina de Sistemas Operativos cujo 
 - O backup_check.sh serve para avaliar se os ficheiros na diretoria que foi copiada são iguais aos da diretoria que contém a sua cópia de segurança.  
 Todos os scripts escrevem no terminal as operações de cópias ou de eliminação de ficheiros/diretorias que fizeram.
 
-O desenvolvimento do ficheiros de backup foi proguessivo, logo no <b>backup_summary.sh</b> constam todas as funcionalidades dos outros.
+<div class="page-break"></div>
+
+**Metodologia de Desenvolvimento**
+
+Para o desenvolvimento deste projeto, adotamos a ferramenta **Git** como controle de versão, permitindo que ambos os desenvolvedores trabalhassem de maneira independente em partes distintas do projeto. Essa abordagem facilitou a colaboração e o gerenciamento de alterações, especialmente ao modularizar as funcionalidades em arquivos separados.
+
+Inicialmente, definimos as responsabilidades de cada função, especificando claramente os parâmetros de entrada, o comportamento esperado e o valor de retorno de cada uma. Com essa estruturação, decidimos a divisão das tarefas entre os membros da equipe, garantindo uma organização eficiente do trabalho.
+
+As responsabilidades ficaram distribuídas da seguinte forma:
+
+- **João Pereira (120010)** foi responsável por implementar a função **`copy_file()`**, pela lógica por trás da função **`backup_check()`** e pela criação dos testes do sistema.
+- **Thiago Vicente (121497)** ficou encarregado de desenvolver as funções **`compModeDate()`**, **`usage()`**, **`nfound()`**, **`find_element()`**, e também de gerenciar o fluxo de execução nos arquivos de backup (**`backup.sh`**, **`backup_files.sh`**, **`backup_summary.sh`**).
+
+O trabalho foi realizado sem intercorrências, uma vez que cada desenvolvedor seguiu as orientações estabelecidas e contribuiu dentro de sua área de responsabilidade. Abaixo, apresentamos uma descrição detalhada das funcionalidades implementadas em cada função e arquivo.
 
 **Testes?** 
 
-Para testar os scripts, iremos testar uma cópia em que a pasta destino está vazia, uma cópia em que a pasta destino tem alguns dos arquivos da pasta source, uma cópia em que a pasta destino tem arquivos que não pertencem à pasta source e vamos testar uma cópia em que a pasta destino tem os mesmos arquivos da pasta source mas alguns foram modificados.
+Para testar os scripts, iremos testar uma cópia em que a pasta destino está vazia, uma cópia em que a pasta destino tem alguns dos arquivos da pasta source, uma cópia em que a pasta destino tem arquivos que não pertencem à pasta source e vamos testar uma cópia em que a pasta destino tem os mesmos arquivos da pasta source mas alguns foram modificados. Também iremos testar pastas com ficheiros escondidos e com espaços nos nomes. Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses parâmetros.
 
-Também iremos testar pastas com ficheiros escondidos e com espaços nos nomes.
 
-Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses parâmetros.
 
 
 <div class="page-break"></div>
