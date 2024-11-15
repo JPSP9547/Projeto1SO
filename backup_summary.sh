@@ -210,17 +210,10 @@ if [ $? -ne 0 ]; then
     end_print
 fi
 
-if [ "$checking" -eq 1 ]; then
-
-    if [[ "$backup_dir" =~ ^/ ]]; then
-        :
-    else
-        backup_dir="$(pwd)/$backup_dir"
-    fi
-else
-    backup_dir=$(realpath "$backup_dir")
+if [ "$checking" -eq 0 ]; then
+    backup_dir=$(realpath "$2")
     if [ $? -ne 0 ]; then
-        echo "Can't resolve backup directory path"
+        echo "Can't resolver backup directory path"
         end_print
     fi
 fi

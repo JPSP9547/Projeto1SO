@@ -249,7 +249,7 @@ sizeDeleted=$((sizeDeleted + res[6]))
 </pre>
 </div>
 
-
+<div class="page-break"></div>
 <h1>Estruturas de dados</h1>
 
 Nesta secção, vamos analisar as principais estruturas de dados utilizadas no script, que são fundamentais para o armazenamento e manipulação de informações durante o processo de backup. Veremos como arrays, variáveis inteiras e strings são usados para controlar a execução e otimizar a organização dos dados.
@@ -273,7 +273,7 @@ No Bash são tratadas como arrays de caracteres e são usadas para armazenar seq
   <span class="variable">exclude_file=""</span>  # <span class="comment">Arquivo contendo os arquivos a excluir</span>
 </div>
 
-
+<div class="page-break"></div>
 <h1>Como dividimos o problema</h1>
 
 <spam>O problema foi dividido de forma a torná-lo mais modular, visando a reutilização do código e facilitando a manutenção e a compreensão. Cada função desempenha um papel fundamental na execução do processo de backup. A seguir, iremos analisar as funções utilizadas e sua contribuição para a solução.</spam>
@@ -427,7 +427,7 @@ Execução:
 </pre>
 </div>
 
-
+<div class="page-break"></div>
 <h1>Como resolvemos certos problemas</h1>
 
 Durante o desenvolvimento, surgiram alguns desafios que puderam ser superados através de pesquisas.
@@ -583,6 +583,9 @@ Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses 
 <u>backup_check.sh</u>
 
 
+
+
+<div class="page-break"></div>
 <h1>Bibliografia</h1>
 
 
