@@ -200,10 +200,6 @@ if [[ $hasExclude == 1 ]];then
 	fi
 fi
 
-source_dir="$1"
-backup_dir="$2"
-
-
 source_dir=$(realpath "$1")
 if [[ $? -ne 0 ]]; then
     echo "Can't resolve source directory path"
@@ -216,6 +212,8 @@ if [[ "$checking" -eq 0 ]]; then
         echo "Can't resolver backup directory path"
         end_print
     fi
+else
+    backup_dir="$2"
 fi
 
 if [[ "$backup_dir" == "$source_dir"* ]]; then
@@ -328,8 +326,8 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
             fi
 			if [ -z "$checking" ];then
 	    			rm -r "$file"
-                    echo "rm -r $file"
 			fi
+			echo "rm -r $file"
     	fi
 	done
 fi

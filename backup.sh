@@ -82,6 +82,8 @@ if [[ "$checking" -eq 0 ]]; then
         echo "Can't resolver backup directory path"
         end_print
     fi
+else
+    backup_dir="$2"
 fi
 
 if [[ "$backup_dir" == "$source_dir"* ]]; then
@@ -185,9 +187,8 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
 
 			if [ -z "$checking" ];then
 	    			rm -r "$file"
-					echo "rm -r $file"
 			fi
-
+			echo "rm -r $file"
     	fi
 	done
 fi

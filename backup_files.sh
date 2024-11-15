@@ -104,14 +104,15 @@ done
 ## Remove files from backup_dir that are not on source_dir
 # Skip when backup dir is empty
 if [[ -d "$backup_dir" && ! -z "$(ls -A "$backup_dir")" ]]; then
-	for file in "$backup_dir"/*; do
+
+            for file in "$backup_dir"/*; do
     		filename=$(basename "$file")
     		if [[ ! -e "$source_dir/$filename" ]]; then
-				if [ -z "$checking" ];then
-						rm -r "$file"
-                        echo "rm -r $file"
-				fi
 
+                if [ -z "$checking" ];then
+						rm -r "$file"
+				fi
+				echo "rm -r $file"
     		fi
 	done
 fi
