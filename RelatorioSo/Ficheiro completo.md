@@ -570,6 +570,17 @@ Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses 
 <small>Teste paramentro -b(não funciona)</small>
 
 <small> Teste com pasta que existe na pasta destino mas que não existe na pasta que vai ser copiada</small>
+![[rmdir.png]]
+
+<small>Teste com pasta que  existe na pasta que vai ser copiada mas não existe na pasta destino</small>
+![[criarPasta.png]]
+
+<small>Teste com pastas escondidas</small>
+![[testeFicheirosEscondidos.png]]
+
+<small>Todos os testes que foram feitos para o backup_files.sh também foram feitos para este script com algumas adaptações(assumindo já a existência de pastas e de ficheiros lá dentro incluindo pastas com espaços)</small>
+
+<u>backup_check.sh</u>
 
 
 <h1>Bibliografia</h1>
