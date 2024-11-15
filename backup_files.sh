@@ -109,6 +109,7 @@ if [ ! -z "$(ls -A "$backup_dir")" ]; then
     		if [[ ! -e "$source_dir/$filename" ]]; then
 				if [ -z "$checking" ];then
 						rm -r "$file"
+                        echo "rm -r $file"
 				fi
 
     		fi

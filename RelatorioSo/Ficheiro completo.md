@@ -532,6 +532,46 @@ sizeDeleted += res->sizeDeleted
 <div class="page-break"></div>
 
 
+**Testes** 
+
+Para testar os scripts, iremos testar uma cópia em que a pasta destino está vazia, uma cópia em que a pasta destino tem alguns dos arquivos da pasta source, uma cópia em que a pasta destino tem arquivos que não pertencem à pasta source e vamos testar uma cópia em que a pasta destino tem os mesmos arquivos da pasta source mas alguns foram modificados.
+
+Também iremos testar pastas com ficheiros escondidos e com espaços nos nomes.
+
+Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses parâmetros.
+
+<u>Backup_files.sh</u>
+
+<small>Teste de cópia básica(foram copiados ficheiros para uma pasta vazia)</small>
+![[testeBasicoBackupFiles 1.png]]
+
+<small>Teste pastas com espaços</small>
+![[testeBasicoBackupFilesComEspaco 1.png]]
+
+<small>Teste cópia com todos os ficheiros já colocados na pasta destino e com a mesma data de alteração</small>
+![[testeBackupFilesTodosFicheirosIguais 1.png]]
+
+<small>Teste cópia em que existem ficheiros na pasta de destino que não existem na pasta que irá ser copiada</small>
+![[testeBackupFilesRemoveFiles 1.png]]
+
+<small>Teste cópia em que existem um ficheiro com data de alteração mais recente na pasta destino do que na pasta que vai ser copiada</small>
+
+![[newerFileInBackup 1.png]]
+
+<small>Teste do parametro -c</small>
+![[teste-c.png]]
+
+<small>Teste em que ambas as pastas têm os mesmos ficheiros, mas a pasta que vai ser copiada tem um arquivo que foi alterado</small>
+![[ficheiroMaisNovoNaSrc.png]]
+
+<u>Backup.sh</u>
+<small>Teste parametro -r (nao funciona por algum motivo)</small>
+
+<small>Teste paramentro -b(não funciona)</small>
+
+<small> Teste com pasta que existe na pasta destino mas que não existe na pasta que vai ser copiada</small>
+
+
 <h1>Bibliografia</h1>
 
 

@@ -1,24 +1,20 @@
 {
   "main": {
-    "id": "b349334cc44f8bd8",
+    "id": "909d0958f4009fe9",
     "type": "split",
     "children": [
       {
-        "id": "ddbc4a57d74fa6d2",
+        "id": "2a98f607a77d83f3",
         "type": "tabs",
         "children": [
           {
-            "id": "099ff25509ea1002",
+            "id": "eaa0647560e6d1af",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Ficheiro completo.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Ficheiro completo"
+              "title": "New tab"
             }
           }
         ]
@@ -27,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "670ed65d379ebbec",
+    "id": "742031f1145ada4e",
     "type": "split",
     "children": [
       {
-        "id": "fed0755d5a0460b2",
+        "id": "95a56183b3a19f28",
         "type": "tabs",
         "children": [
           {
-            "id": "b7496fd368355f5d",
+            "id": "82b94bee883de7d8",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -47,7 +43,7 @@
             }
           },
           {
-            "id": "2fb1c6e982af0660",
+            "id": "e7f1c349ffe7c6d1",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -64,7 +60,7 @@
             }
           },
           {
-            "id": "f994ce44940891cf",
+            "id": "75c81e968adbf39f",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -80,20 +76,19 @@
     "width": 300
   },
   "right": {
-    "id": "66ebdc60ba82ab76",
+    "id": "400877d7a3096611",
     "type": "split",
     "children": [
       {
-        "id": "b68ff5c5f9d32b9a",
+        "id": "5f8ea60677420f06",
         "type": "tabs",
         "children": [
           {
-            "id": "72045af59b3393ba",
+            "id": "70ea542cacfa8a0e",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "relatorioSo/Como foi dividido o problema.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,25 +98,24 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Como foi dividido o problema"
+              "title": "Backlinks"
             }
           },
           {
-            "id": "036607c6e9e8a508",
+            "id": "2208e6b033710ecc",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "relatorioSo/Como foi dividido o problema.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Como foi dividido o problema"
+              "title": "Outgoing links"
             }
           },
           {
-            "id": "df4e4cb1a1dd182c",
+            "id": "1db0c70c6a568b69",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -134,15 +128,13 @@
             }
           },
           {
-            "id": "c988a51371d24deb",
+            "id": "05f98fb629fe67ab",
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "relatorioSo/Como foi dividido o problema.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "Outline of Como foi dividido o problema"
+              "title": "Outline"
             }
           }
         ]
@@ -154,9 +146,6 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "pdf-plus:PDF++: Toggle auto-copy": false,
-      "pdf-plus:PDF++: Toggle auto-focus": false,
-      "pdf-plus:PDF++: Toggle auto-paste": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -165,26 +154,10 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "099ff25509ea1002",
+  "active": "eaa0647560e6d1af",
   "lastOpenFiles": [
-    "ficheiroMaisNovoNaSrc.png",
-    "teste-c.png",
-    "newerFileInBackup 1.png",
-    "testeBackupFilesRemoveFiles 1.png",
-    "testeBackupFilesTodosFicheirosIguais 1.png",
-    "testeBasicoBackupFilesComEspaco 1.png",
-    "testeBasicoBackupFiles 1.png",
-    "testeBasicoBackupFilesComEspaco.png",
-    "testeBasicoBackupFiles.png",
-    "testeBackupFilesTodosFicheirosIguais.png",
-    "testeBackupFilesRemoveFiles.png",
-    "relatorioSo/Como resolver certos problemas.md",
-    "relatorioSo/Como foi dividido o problema.md",
-    "Ficheiro completo.md",
-    "relatorioSo/Estruturas de dados.md",
-    "Ficheiros principais.md",
-    "relatorioSo/Relatório so.md",
-    "relatorioSo",
-    "Welcome.md"
+    "Como foi dividido o problema.md",
+    "Como resolver certos problemas.md",
+    "Estruturas de dados.md"
   ]
 }

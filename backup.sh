@@ -176,6 +176,7 @@ if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
 
 			if [ -z "$checking" ];then
 	    			rm -r "$file"
+                    echo "rm -r $file"
 			fi
 
     	fi
