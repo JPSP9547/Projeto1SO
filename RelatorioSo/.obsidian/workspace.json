@@ -22,26 +22,6 @@
             }
           }
         ]
-      },
-      {
-        "id": "a4c253daa9528010",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "099ff25509ea1002",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Ficheiro completo.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Ficheiro completo"
-            }
-          }
-        ]
       }
     ],
     "direction": "vertical"
@@ -188,6 +168,12 @@
   },
   "active": "c13266405b6ce212",
   "lastOpenFiles": [
+    "testeBackupSummary.png",
+    "testeBackupCheck.png",
+    "2ParametrosAomesmoTempo.png",
+    "parametror 1.png",
+    "parametror.png",
+    "parametroB.png",
     "Ficheiro completo.md",
     "Tryhard relatório.md",
     "testeFicheirosEscondidos.png",
@@ -195,11 +181,6 @@
     "rmdir.png",
     "ficheiroMaisNovoNaSrc.png",
     "teste-c.png",
-    "newerFileInBackup 1.png",
-    "testeBackupFilesRemoveFiles 1.png",
-    "testeBackupFilesTodosFicheirosIguais 1.png",
-    "testeBasicoBackupFilesComEspaco 1.png",
-    "testeBasicoBackupFiles 1.png",
     "relatorioSo/Como resolver certos problemas.md",
     "relatorioSo/Como foi dividido o problema.md",
     "relatorioSo/Estruturas de dados.md",

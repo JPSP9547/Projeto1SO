@@ -24,10 +24,10 @@ As responsabilidades ficaram distribuídas da seguinte forma:
 
 O trabalho foi realizado sem intercorrências, uma vez que cada desenvolvedor seguiu as orientações estabelecidas e contribuiu dentro de sua área de responsabilidade. Abaixo, apresentamos uma descrição detalhada das funcionalidades implementadas em cada função e arquivo.
 
-**Testes?** 
+**Testes**
 
 Para testar os scripts, iremos testar uma cópia em que a pasta destino está vazia, uma cópia em que a pasta destino tem alguns dos arquivos da pasta source, uma cópia em que a pasta destino tem arquivos que não pertencem à pasta source e vamos testar uma cópia em que a pasta destino tem os mesmos arquivos da pasta source mas alguns foram modificados. Também iremos testar pastas com ficheiros escondidos e com espaços nos nomes. Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses parâmetros.
-
+Os teste apresentados neste relatório não representam a totalidade dos testes feitos, mas sim apenas os mais pertinentes de serem discutidos.
 
 
 
@@ -391,9 +391,17 @@ Fim para
 
 <b>Testes</b>
 <u>Backup.sh</u>
-<h1>TODO</h1>
-<b>testes para -b e -r</b>
 
+<small>Teste parametro -b</small>
+
+![[parametroB.png]]
+
+<small>Teste parametro -r</small>
+
+![[parametror 1.png]]
+
+<small>Teste com 2 parametros ao mesmo tempo</small>
+![[2ParametrosAomesmoTempo.png]]
 
 <small> Teste com pasta que existe na pasta destino mas que não existe na pasta que vai ser copiada</small>
 ![[rmdir.png]]
@@ -496,18 +504,72 @@ sizeDeleted=$((sizeDeleted + res[6]))
 <div class="page-break"></div>
 
 <b>Testes</b>
-<h1>TODO</h1>
-<b>testar</b>
+<small>Foram utilizados os mesmos testes que os do backup.sh devido à similaridade do código, acrescentando-se apenas alguns testes</small>
+
+<small>Foi usado um teste em que a pasta destino tem 2 arquivos que não estão na pasta que vai ser copiada(um na raiz e outro em uma subpasta) e em que 1 arquivo na pasta destino é mais novo do que um da pasta que vai ser copiada.
+O resto dos arquivos será igual</small>
 
 <div class="page-break"></div>
-
+![[testeBackupSummary.png]]
 <h3>Backup_check.sh</h3>
-<h1>TODO</h1>
-<b>fazer o mesmo que nos outros e aplicar os testes. usa a linha abaixo para quebra de página. A linha fica invisivel depois de tirares o mouse. </b>
-<b><u>div class="page-break"</u></b>
 
+O objetivo deste script é confirmar que os ficheiros que se encontram tanto na pasta destino tanto na pasta que irá ser copiada são iguais.
 
+<h3>Etapas</h3>
 
+- Validar inputs do script
+<div class = "code-block">
+<pre>
+     if [[ $# != 2 ]]; then
+        echo "Script has to receive 2 arguments"
+        return 1
+    fi
+
+    if [[ ! -d $1 && -d $2 ]]; then
+        echo "Arguments have to be directories"
+        return 1
+    fi
+
+</pre>
+</div>
+
+- Retirar a "/" (caso exista) do fim do path da diretoria (para normalizar o comportamento do código caso o input seja com ou sem a "/" no fim)
+<div class = "code-block">
+<pre>
+  work_dir=$1
+   backup_dir=$2
+
+    # removes last bar(/) from backup_dir path (for formatting reasons)
+    if [[ $work_dir == */ ]]; then
+        work_dir="${work_dir:0:-1}" 
+    fi
+
+    if [[ $backup_dir == */ ]]; then
+        backup_dir="${backup_dir:0:-1}"
+    fi
+</pre>
+</div>
+
+- Iterar pelos ficheiros e ver se são diferentes
+
+<div class = "code-block">
+<pre>
+se backup_dir existe e não está vazio, entao
+	para cada ficheiro em backup_dir
+		se ficheiro é um diretorio
+			chamar funcao para com argumentos , "work_dir/nome do ficheiro"  e ficheiro
+		senao
+			se ficheiro é um ficheiro normal
+				se md5sum(ficheiro) != md5sum(work_dir/nome de ficheiro)
+					print("os ficheiros sao diferentes")
+</pre>
+</div>
+
+<h3>Testes</h3>
+<small>Foi usada uma pasta com todos os ficheiros iguais menos 2, um na raiz e outro em uma subpasta</small>
+
+![[testeBackupCheck.png]]
+<bdiv class="page-break"></b>
 
 <div class="page-break"></div>
 <h1>Como resolvemos certos problemas</h1>

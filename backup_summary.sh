@@ -208,7 +208,7 @@ fi
 
 if [[ "$checking" -eq 0 ]]; then
     backup_dir=$(realpath "$2")
-    if [[ç $? -ne 0 ]]; then
+    if [[ $? -ne 0 ]]; then
         echo "Can't resolver backup directory path"
         end_print
     fi

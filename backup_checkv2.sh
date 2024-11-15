@@ -36,18 +36,10 @@ backup_check(){
 		    work_dirRecursive="$work_dir/$folderName"
                 backup_dirRecursive="$file"
 			
-#		    if [[ ! -d "$work_dir/$folderName"  ]];then
-			    
-#			    echo "212-> $folderName/ does not exist on $work_dir"
-
-#		    fi
-
 
 
            if [[ -d $work_dirRecursive ]]; then
                backup_check $work_dirRecursive $backup_dirRecursive    
-           else
-               echo "[FOLDER] $file does not exist on $work_dir"
           	fi
 
 
@@ -56,49 +48,9 @@ backup_check(){
                     if [[ $(md5sum "$file" | awk '{print $1}') != $(md5sum "$work_dir/$fileName" | awk '{print $1}') ]]; then
                         echo "$file and $work_dir/$fileName differ"
                     fi
-                else
-                    echo "[FILE] $file does not exist in $work_dir"
                 fi
             fi
         done
-
-        #for file in "$work_dir"/*; do
-        #    fileName=$(basename "$file")
-        #    if [[ -d $file ]]; then
-        #        echo $file
-        #        folderName=echo $file | tr "/" " " | awk '{print $NF}'
-        #        work_dirRecursive="$file"
-        #        backup_dirRecursive="$backup_dir/$folderName"
-#
-#
-        #    if [[ -d $backup_dirRecursive ]]; then
-        #        backup_check $work_dirRecursive $backup_dirRecursive    
-        #    else
-        #        echo "Folder $file does not exist on $backup_dir"
-        #    fi
-#
-#
-        #    else
-        #        if [[ -f "$backup_dir/$fileName" ]];then
-        #            if [[ $(md5sum "$file" | awk '{print $1}') != $(md5sum "$backup_dir/$fileName" | awk '{print $1}') ]]; then
-        #                echo "$file and $backup_dir/$fileName differ"
-        #            fi
-        #        else
-        #            echo "$file does not exist in $backup_dir (SHOULD NOT HAPPEN)"
-        #        fi
-        #    fi
-        #done
-
-    elif [ ! -z "$(ls -A "$work_dir")" ]; then
-        for file in "$work_dir"/*; do
-            if [[ -f $file ]]; then
-                
-                fileName=$(basename "$file")
-
-                echo "$file does not exist on $backup_dir"
-            fi
-        done
-
     fi
 
 }
