@@ -17,7 +17,7 @@ copyFile(){
             copy=0
 
         else
-            echo "Bad use of function copyFile"
+            echo "Bad use of function copyFile" >&2
 			return 1
         fi
 
