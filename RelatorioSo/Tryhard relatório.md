@@ -1,3 +1,31 @@
+<small>Sistemas Operativos</small>                                                                                             <small>2024/2025</small> 
+
+
+![[logodeti 1.png]]
+
+
+
+
+
+
+
+
+
+<p align="center"><font size=7 style="text-align=center">Projeto1: Ferramenta de criação/atualização de cópias de segurança em Bash</font></p>
+
+
+
+
+
+
+
+
+
+
+<font size=4><p align="center">Autores: João Pereira 120010 , Thiago Vicente 121497</p></font>
+
+
+
 <h1>Introdução</h1>
 
 **Do que se trata?**
@@ -577,8 +605,10 @@ se backup_dir existe e não está vazio, entao
 <small>Foi usada uma pasta com todos os ficheiros iguais menos 2, um na raiz e outro em uma subpasta</small>
 
 ![[testeBackupCheck.png]]
-<bdiv class="page-break"></b>
 
+<small>Foram usadas subpastas com espaços e um ficheiro diferentes também ele com espaços para testar o comportamento do programa quer com subpastas quer com nomes que tenham espaços</small>
+<bdiv class="page-break"></b>
+![[backup_checkMonstro.png]]
 <div class="page-break"></div>
 <h1>Como resolvemos certos problemas</h1>
 

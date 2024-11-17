@@ -13,8 +13,8 @@ backup_check(){
         return 1
     fi
 
-    work_dir="$1"
-    backup_dir="$2"
+    local work_dir="$1"
+    local backup_dir="$2"
 
     # removes last bar(/) from backup_dir path (for formatting reasons)
     if [[ "$work_dir" == */ ]]; then
@@ -34,13 +34,8 @@ backup_check(){
 		    folderName="$( basename "$file" )" #**
 		    work_dirRecursive="$work_dir/$folderName"
             backup_dirRecursive="$file"
-			echo "folderName = $folderName"
-            echo "work_dir = $work_dir"
-            echo "work_dirRecursive = $work_dirRecursive"
-            echo "backup_dirRecursive = $backup_dirRecursive"
 
            if [[ -d "$work_dirRecursive" ]]; then
-               echo "recursiva $work_dirRecursive $backup_dirRecursive"
                backup_check "$work_dirRecursive" "$backup_dirRecursive"    
           	fi
 
