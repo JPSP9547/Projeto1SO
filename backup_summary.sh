@@ -50,13 +50,12 @@ usage(){
 }
 end_print(){
     # prints the final output or returns a recursive data
+    echo "While backuping $source_dir: $cError Errors; $cWarnings Warnings; $cUpdated Updated; $cCopied Copied (${sizeCopied}B); $cDeleted Deleted (${sizeDeleted}B)"
 	if [[ "$is_recursive" -eq 1 ]];then
-		echo "While backing up $source_dir: $cError Errors; $cWarnings Warnings; $cUpdated Updated; $cCopied Copied (${sizeCopied}B); $cDeleted deleted (${sizeDeleted}B)"
 		local result=("$cError" "$cWarnings" "$cUpdated" "$cCopied" "$sizeCopied" "$cDeleted" "$sizeDeleted")
 		echo "${result[@]}"
 		exit 0
 	else
-		echo "While backing up $source_dir: $cError Errors; $cWarnings Warnings; $cUpdated Updated; $cCopied Copied (${sizeCopied}B); $cDeleted deleted (${sizeDeleted}B)"
 		exit $1
 	fi
 }
@@ -217,6 +216,9 @@ fi
 if [[ "$backup_dir" == "$source_dir"* ]]; then
   echo "[ERROR] $backup_dir is inside $source_dir"
   end_print
+else
+    source_dir="$1"
+    backup_dir="$2"
 fi
 
 
