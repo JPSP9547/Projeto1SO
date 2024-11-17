@@ -511,6 +511,14 @@ O resto dos arquivos será igual</small>
 
 <div class="page-break"></div>
 ![[testeBackupSummary.png]]
+
+<small>Foi usado uma pasta em que uma subpasta e um ficheiro têm espaços no nome para testar como o programa trata estes ficheiros</small>
+![[testeBackup_SummaryEspacos.png]]
+
+<small>Foram usadas duas pastas com os mesmos ficheiros</small>
+![[testeBackupSummaryPastasIguais.png]]
+
+
 <h3>Backup_check.sh</h3>
 
 O objetivo deste script é confirmar que os ficheiros que se encontram tanto na pasta destino tanto na pasta que irá ser copiada são iguais.
