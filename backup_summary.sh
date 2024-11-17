@@ -122,7 +122,7 @@ copyFile(){
 						return 1
 					else
 						file_size=$(stat -c %s "$file")
-						((cCopied++))
+						((cUpdated++))
 						sizeCopied=$((sizeCopied + file_size))
 						return 0
 					fi
