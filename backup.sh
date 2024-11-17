@@ -15,7 +15,7 @@ done
 
 usage(){
 	if [[ "$is_recursive" -eq 0 ]];then
-		echo "[USAGE] ./backup.sh [-c] [-b excludefile] [-r regx] dir_source dir_backup"
+		echo "[USAGE] ./backup.sh [-c] [-b excludefile] [-r regx] dir_source dir_backup" >&2
 	fi
 	exit 1
 }
@@ -35,7 +35,7 @@ hasExclude=0
 while getopts ":czb:r:" op; do
     case $op in
 	c)
-        echo "Checking activated"
+        #echo "Checking activated"
 		checking=1
 	;;
 	b)
@@ -71,7 +71,7 @@ fi
 # resolve source_dir
 source_dir=$(realpath "$1")
 if [[ $? -ne 0 ]]; then
-    echo "Can't resolve source directory path"
+    echo "[ERROR] Can't resolve source directory path" >&2
     exit 1
 fi
 
@@ -79,30 +79,21 @@ fi
 if [[ "$checking" -eq 0 ]]; then
     backup_dir=$(realpath "$2")
     if [[ $? -ne 0 ]]; then
-        echo "Can't resolver backup directory path"
-        end_print
+        echo "[ERROR] Can't resolver backup directory path" >&2
+        exit 1
     fi
 else
     backup_dir="$2"
 fi
 
 if [[ "$backup_dir" == "$source_dir"* ]]; then
-  echo "[ERROR] $backup_dir is inside $source_dir"
-  end_print
+    echo "[ERROR] $backup_dir is inside $source_dir" >&2
+    exit 1
+else
+    source_dir="$1"
+    backup_dir="$2"
 fi
 
-if [[ "$backup_dir" == "$source_dir"* ]]; then
-  echo "[ERROR] $backup_dir is inside $source_dir"
-  exit 1
-fi
-
-
-if [[ "$source_dir" != /* &&  "$source_dir" != ./* ]]; then
-	source_dir="./$source_dir"
-fi
-if [[ "$backup_dir" != /* && "$backup_dir" != ./* ]]; then
-    backup_dir="./$backup_dir"
-fi
 
 # removes last bar(/) from backup_dir path (for formatting reasons)
 if [[ $source_dir == */ ]]; then
@@ -114,18 +105,12 @@ if [[ $backup_dir == */ ]]; then
 fi
 # validate source directory
 
-if [ ! -d "$source_dir/" ]; then
-	nfound "source" "$source_dir"
-	exit 1
-fi
-
-
 # backup directory
 if [ ! -d "$backup_dir" ];then
 	if [ -z "$checking" ];then
 		mkdir -p "$backup_dir"
 		if [[ $? -eq 1 ]];then
-		    echo "[ERROR] could not create directory $backup_sir"
+		    #echo "[ERROR] could not create directory $backup_sir"
 			exit 1
 		fi
 
@@ -159,7 +144,7 @@ for item in "$source_dir"/*; do
 		output="$(eval "$function_call $params")"
 
 		# prints every cp and mkdir statement
-		echo "$output" | grep -E '^(cp|mkdir|rm)'
+		echo "$output" | grep -E '^(cp|mkdir|rm|[WARNING])'
 
 	elif [[ $base_item =~ $regx ]]; then
 		if [[ -f $item ]]; then

@@ -12,7 +12,7 @@ compModDate(){
 	if [[ "$file1" -nt "$file2" ]];then
 		return 0
     elif [[ "$file2" -nt "$file1" ]];then
-        echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
+        echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)" >&3
         ((cWarnings++))
 		return 1
     else

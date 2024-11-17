@@ -44,7 +44,7 @@ findElement(){
 
 usage(){
 	if [[ "$is_recursive" -eq 0 ]];then
-		echo "[USAGE] ./backup.sh [-c] [-b excludefile] [-r regx] dir_source dir_backup"
+		echo "[USAGE] ./backup.sh [-c] [-b excludefile] [-r regx] dir_source dir_backup" >&2
 	fi
 	end_print
 }
@@ -74,10 +74,11 @@ compModDate(){
 	if [[ "$file1" -nt "$file2" ]];then
 		return 0
     elif [[ "$file2" -nt "$file1" ]];then
-        echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)"
+        echo "[WARNING] Backed file ($file2) is newer than source file ($file1) (SHOULD NOT HAPPEN)" >&3
         ((cWarnings++))
 		return 1
     else
+
         return 1 #if dates are equal it will not copy the file
     fi
 }
@@ -101,7 +102,7 @@ copyFile(){
             copy=0
 
         else
-            echo "Bad use of function copyFile"
+            #echo "Bad use of function copyFile"
 			return 1
         fi
 
@@ -109,21 +110,22 @@ copyFile(){
         fileName="$(basename "$file")"
 
         if [[ -f "$destination/$fileName" ]]; then
-            compModDate "$file" "$destination/$fileName"
 
+            compModDate "$file" "$destination/$fileName"
             if [[ $? -eq 0 ]]; then
 
                 if [[ $copy -eq 1 ]]; then
                     cp -a "$file" "$destination"
-                	echo "cp -a $file $destination/$fileName"
-					if [[ $? -ne 0 ]]; then
+                   	if [[ $? -ne 0 ]]; then
 						((cError++))
 						return 1
-					else
-						((cUpdated++))
-						return 0
 					fi
-				fi
+                fi
+                	echo "cp -a $file $destination/$fileName"
+					((cUpdated++))
+					return 0
+
+
 	    	else
                 return 1
             fi
@@ -164,7 +166,7 @@ function_call="$0"
 while getopts ":czb:r:" op; do
     case $op in
 	c)
-        echo "Checking activated"
+        #echo "Checking activated"
 		checking=1
 	;;
 	b)
@@ -199,14 +201,16 @@ fi
 
 source_dir=$(realpath "$1")
 if [[ $? -ne 0 ]]; then
-    echo "Can't resolve source directory path"
+    ((cError++))
+    echo "[ERROR] Can't resolve source directory path" >&2
     end_print
 fi
 
-if [[ "$checking" -eq 0 ]]; then
+if [[ "$checking" -eq 0 || "$is_recursive" -eq 0  ]]; then
     backup_dir=$(realpath "$2")
     if [[ $? -ne 0 ]]; then
-        echo "Can't resolver backup directory path"
+        echo "[ERROR] Can't resolve backup directory path" >&2
+        ((cError++))
         end_print
     fi
 else
@@ -214,13 +218,13 @@ else
 fi
 
 if [[ "$backup_dir" == "$source_dir"* ]]; then
-  echo "[ERROR] $backup_dir is inside $source_dir"
+  echo "[ERROR] $backup_dir is inside $source_dir" >&2
+  ((cError++))
   end_print
 else
     source_dir="$1"
     backup_dir="$2"
 fi
-
 
 # removes last bar(/) from backup_dir path (for formatting reasons)
 if [[ $source_dir == */ ]]; then
@@ -231,19 +235,13 @@ if [[ $backup_dir == */ ]]; then
     backup_dir="${backup_dir:0:-1}"
 fi
 
-# validate source directory
-if [ ! -d "$source_dir" ]; then
-	nfound "source" "$source_dir"
-	end_print
-fi
-
 # backup directory
 if [ ! -d "$backup_dir" ];then
 	if [ -z "$checking" ];then
 		mkdir -p "$backup_dir"
 		if [[ $? -ne 0 ]]; then
 			((cError++))
-			echo "[ERROR] could not create directory $backup_sir"
+			echo "[ERROR] could not create directory $backup_sir" >&2
 			end_print
 		fi
 	fi
@@ -278,7 +276,7 @@ for item in "$source_dir"/*; do
 
 		#echo $command
 		output="$(eval "$function_call $params")"
-		echo "$output" | grep -E '^(cp|mkdir|rm|While)'
+		echo "$output" | grep -E '^(cp|mkdir|rm|While|[WARNING])'
 
 		last_line="${output##*$'\n'}"
 		res=($last_line)

@@ -21,7 +21,7 @@ done
 
 usage(){
 	if [[ "$is_recursive" -eq 0 ]];then
-		echo "[USAGE] ./backup.sh [-c] dir_source dir_backup"
+		echo "[USAGE] ./backup.sh [-c] dir_source dir_backup" >&2
 	fi
 	exit 1
 }
@@ -38,7 +38,7 @@ fi
 while getopts ":cb:r:" op; do
     case $op in
 	c)
-        echo "checking activated"
+        #echo "checking activated"
 		checking=1
 	;;
 	*)
