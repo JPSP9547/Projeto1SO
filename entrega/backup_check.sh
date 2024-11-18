@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s dotglob
+
 #MAIN
 backup_check(){
 
@@ -18,14 +20,14 @@ backup_check(){
 
     # removes last bar(/) from backup_dir path (for formatting reasons)
     if [[ "$work_dir" == */ ]]; then
-        work_dir="${work_dir:0:-1}" 
+        work_dir="${work_dir:0:-1}"
     fi
 
     if [[ "$backup_dir" == */ ]]; then
         backup_dir="${backup_dir:0:-1}"
     fi
 
-    if [ ! -z "$(ls -A "$backup_dir")" ]; then 
+    if [ ! -z "$(ls -A "$backup_dir")" ]; then
         for file in "$backup_dir"/*; do
             fileName="$(basename "$file")"
             if [[ -d "$file" ]]; then
@@ -36,7 +38,7 @@ backup_check(){
             backup_dirRecursive="$file"
 
            if [[ -d "$work_dirRecursive" ]]; then
-               backup_check "$work_dirRecursive" "$backup_dirRecursive"    
+               backup_check "$work_dirRecursive" "$backup_dirRecursive"
           	fi
 
 
