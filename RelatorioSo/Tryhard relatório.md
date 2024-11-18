@@ -21,7 +21,7 @@ Inicialmente, definimos as responsabilidades de cada função, especificando cla
 As responsabilidades ficaram distribuídas da seguinte forma:
 
 - **João Pereira (120010)** foi responsável por implementar a função **`copy_file()`**, pela lógica por trás da função **`backup_check()`** e pela criação dos testes do sistema.
-- **Thiago Vicente (121497)** ficou encarregado de desenvolver as funções **`compModeDate()`**, **`usage()`**, **`nfound()`**, **`find_element()`**, e também de gerenciar o fluxo de execução nos arquivos de backup (**`backup.sh`**, **`backup_files.sh`**, **`backup_summary.sh`**).
+- **Thiago Vicente (121497)** ficou encarregado de desenvolver as funções **`compModeDate()`**, **`usage()`**, **`nfound()`**, **`find_element()`**, de desenvolver e os arquivos de backup (**`backup.sh`**, **`backup_files.sh`**, **`backup_summary.sh`**) e de fazer os últimos retoques do **`backup_check.sh`**.
 
 O trabalho foi realizado sem intercorrências, uma vez que cada desenvolvedor seguiu as orientações estabelecidas e contribuiu dentro de sua área de responsabilidade. Abaixo, apresentamos uma descrição detalhada das funcionalidades implementadas em cada função e arquivo.
 
