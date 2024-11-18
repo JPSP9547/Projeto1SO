@@ -86,7 +86,7 @@ else
     backup_dir="$2"
 fi
 
-if [[ "$backup_dir" == "$source_dir"* ]]; then
+if [[  "$is_recursive" -eq 0  &&  "$backup_dir" == "$source_dir"* ]]; then
     echo "[ERROR] $backup_dir is inside $source_dir" >&2
     exit 1
 else
