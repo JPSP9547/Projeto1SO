@@ -1,3 +1,4 @@
+#!/bin/bash
 copyFile(){
     	#function has 3 arguments
     	#argument1 : absolute path of file to be copied

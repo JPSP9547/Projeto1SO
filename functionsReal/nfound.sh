@@ -1,3 +1,4 @@
+#!/bin/bash
 nfound(){
 	# Prints not found message
 	# arg1 is the field name

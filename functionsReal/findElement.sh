@@ -1,3 +1,4 @@
+#!/bin/bash
 findElement(){
 	#FUNCTIONS NEEDS 2 params
 	# $1 is the array

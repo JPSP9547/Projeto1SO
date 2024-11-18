@@ -1,3 +1,4 @@
+#!/bin/bash
 compModDate(){
 	# Functions has two parameters
 	# arg1 is the source_dir file

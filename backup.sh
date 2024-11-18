@@ -163,17 +163,5 @@ for item in "$source_dir"/*; do
 
 done
 
-## Remove files from backup_dir that are not on source_dir
-# Skip when backup dir is empty
-if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
-	for file in "$backup_dir"/*; do
-    	filename=$(basename "$file")
-    	if [[ ! -e "$source_dir/$filename" ]]; then
-
-			if [ -z "$checking" ];then
-	    			rm -r "$file"
-			fi
-			echo "rm -r $file"
-    	fi
-	done
-fi
+result=$(removeRecursive "$source_dir" "$backup_dir" "$checking")
+echo "$result" | grep 'rm'

@@ -2,6 +2,13 @@
 
 shopt -s dotglob
 
+function_call="$0"
+SCRIPT_DIR="$(dirname "$(realpath "$function_call")")"
+DIR="$SCRIPT_DIR/functionsReal"
+
+source "$DIR/removeRecursive.sh"
+source "$DIR/removeRecursiveHelper.sh"
+
 ######### Variables
 
 checking=""
@@ -305,29 +312,16 @@ for item in "$source_dir"/*; do
 
 done
 
-## Remove files from backup_dir that are not on source_dir
-# Skip when backup dir is empty
-if [[ -d "$backup_dir" &&  ! -z "$(ls -A "$backup_dir")" ]]; then
-	for file in "$backup_dir"/*; do
-    	filename=$(basename "$file")
-    	if [[ ! -e "$source_dir/$filename" ]]; then
+if [[ "$is_recursive" -eq 0 ]];then
+    result=$(removeRecursive "$source_dir" "$backup_dir" "$checking")
+    echo "$result" | grep 'rm'
+    result="${result##*$'\n'}"
 
-            if [ -d "$file" ]; then
-                num_files=$(find "$file" -type f | wc -l)
-                dir_size=$(du -sb "$file" | cut -f1)
-                ((cDeleted += num_files))
-                ((sizeDeleted += dir_size))
-            else
-                file_size=$(stat --format=%s "$file")
-                ((sizeDeleted += file_size))
-                ((cDeleted++))
-            fi
-			if [ -z "$checking" ];then
-	    			rm -r "$file"
-			fi
-			echo "rm -r $file"
-    	fi
-	done
+    dir_count=$(echo "$result" | cut -d ' ' -f 1)
+    dir_size=$(echo "$result" | cut -d ' ' -f 2)
+
+    ((cDeleted += dir_count))
+    ((sizeDeleted += dir_size))
+
 fi
-
 end_print
