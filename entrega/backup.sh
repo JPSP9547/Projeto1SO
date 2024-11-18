@@ -76,7 +76,7 @@ if [[ $? -ne 0 || ! -d "$source_dir" ]]; then
 fi
 
 # resolve backup_dir avoiding erros
-if [[ "$checking" -eq 0 ]]; then
+if [[ "$checking" -eq 0 || "$is_recursive" -eq 0 ]]; then
     backup_dir=$(realpath "$2")
     if [[ $? -ne 0 ]]; then
         echo "[ERROR] Can't resolver backup directory path" >&2
