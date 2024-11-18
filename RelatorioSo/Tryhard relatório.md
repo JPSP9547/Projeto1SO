@@ -1,30 +1,3 @@
-<small>Sistemas Operativos</small>                                                                                             <small>2024/2025</small> 
-
-
-![[logodeti 1.png]]
-
-
-
-
-
-
-
-
-
-<p align="center"><font size=7 style="text-align=center">Projeto1: Ferramenta de criação/atualização de cópias de segurança em Bash</font></p>
-
-
-
-
-
-
-
-
-
-
-<font size=4><p align="center">Autores: João Pereira 120010 , Thiago Vicente 121497</p></font>
-
-
 
 <h1>Introdução</h1>
 
@@ -537,7 +510,6 @@ sizeDeleted=$((sizeDeleted + res[6]))
 <small>Foi usado um teste em que a pasta destino tem 2 arquivos que não estão na pasta que vai ser copiada(um na raiz e outro em uma subpasta) e em que 1 arquivo na pasta destino é mais novo do que um da pasta que vai ser copiada.
 O resto dos arquivos será igual</small>
 
-<div class="page-break"></div>
 ![[testeBackupSummary.png]]
 
 <small>Foi usado uma pasta em que uma subpasta e um ficheiro têm espaços no nome para testar como o programa trata estes ficheiros</small>
@@ -546,9 +518,8 @@ O resto dos arquivos será igual</small>
 <small>Foram usadas duas pastas com os mesmos ficheiros</small>
 ![[testeBackupSummaryPastasIguais.png]]
 
-
+<div class="page-break"></div>
 <h3>Backup_check.sh</h3>
-
 O objetivo deste script é confirmar que os ficheiros que se encontram tanto na pasta destino tanto na pasta que irá ser copiada são iguais.
 
 <h3>Etapas</h3>
