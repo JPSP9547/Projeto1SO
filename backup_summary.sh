@@ -207,7 +207,7 @@ if [[ $hasExclude == 1 ]];then
 fi
 
 source_dir=$(realpath "$1")
-if [[ $? -ne 0 ]]; then
+if [[ $? -ne 0 || ! -d "$source_dir" ]]; then
     ((cError++))
     echo "[ERROR] Can't resolve source directory path" >&2
     end_print
