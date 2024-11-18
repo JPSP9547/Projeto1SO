@@ -100,3 +100,13 @@ ul {
 ul li {
     margin-bottom: 1px; /* Diminui o espaço entre os itens da lista */
 }
+/* Remover sublinhado e usar a cor normal para links internos */
+.internal-link {
+    text-decoration: none; /* Remove o sublinhado */
+    color: inherit;       /* Faz com que a cor seja a mesma do texto normal */
+}
+
+.internal-link:hover {
+    text-decoration: none; /* Remove o sublinhado no hover */
+    color: inherit;       /* Mantém a cor do texto normal no hover */
+}

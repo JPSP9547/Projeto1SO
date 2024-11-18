@@ -1,5 +1,39 @@
+<h1> Indice</h1>
 
-<h1>Introdução</h1>
+- [[#Introdução|Introdução]]
+- [[#Metodologia de Desenvolvimento|Metodologia de Desenvolvimento]]
+	- [[#Metodologia de Desenvolvimento#Testes|Testes]]
+- [[#Estruturas de dados|Estruturas de dados]]
+	- [[#Estruturas de dados#Arrays|Arrays]]
+	- [[#Estruturas de dados#Uso:|Uso:]]
+	- [[#Estruturas de dados#Strings|Strings]]
+	- [[#Estruturas de dados#Uso:|Uso:]]
+	- [[#Estruturas de dados#findElement()|findElement()]]
+	- [[#Estruturas de dados#compModDate()|compModDate()]]
+	- [[#Estruturas de dados#copyFile()|copyFile()]]
+	- [[#Estruturas de dados#usage()|usage()]]
+	- [[#Estruturas de dados#nfound()|nfound()]]
+	- [[#Estruturas de dados#end_print()|end_print()]]
+- [[#Ficheiros Principais|Ficheiros Principais]]
+	- [[#Ficheiros Principais#backup_files.sh|backup_files.sh]]
+	- [[#Ficheiros Principais#backup.sh|backup.sh]]
+	- [[#Ficheiros Principais#backup_summary.sh|backup_summary.sh]]
+	- [[#Ficheiros Principais#Backup_check.sh|Backup_check.sh]]
+	- [[#Ficheiros Principais#Etapas|Etapas]]
+	- [[#Ficheiros Principais#Testes|Testes]]
+- [[#Como resolvemos certos problemas|Como resolvemos certos problemas]]
+	- [[#Como resolvemos certos problemas#Backup de ficheiros escondidos (.file)|Backup de ficheiros escondidos (.file)]]
+	- [[#Como resolvemos certos problemas#Verificar se o diretório destino estava dentro da source|Verificar se o diretório destino estava dentro da source]]
+	- [[#Como resolvemos certos problemas#Usar <i>realpath</i> para chamadas recursivas|Usar <i>realpath</i> para chamadas recursivas]]
+	- [[#Como resolvemos certos problemas#Display dos passos efetuados na chamada recursiva|Display dos passos efetuados na chamada recursiva]]
+	- [[#Como resolvemos certos problemas#Summary das alterações no backup_summary.sh|Summary das alterações no backup_summary.sh]]
+- [[#Bibliografia|Bibliografia]]
+
+
+
+<div class="page-break"></div>
+
+## Introdução
 
 **Do que se trata?**
 Este projeto foi realizado no âmbito da disciplina de Sistemas Operativos cujo objetivo foi a criação de 3 scripts para criação e atualização de cópias de segurança.
@@ -12,7 +46,7 @@ Todos os scripts escrevem no terminal as operações de cópias ou de eliminaç�
 
 <div class="page-break"></div>
 
-**Metodologia de Desenvolvimento**
+## Metodologia de Desenvolvimento
 
 Para o desenvolvimento deste projeto, adotamos a ferramenta **Git** como controle de versão, permitindo que ambos os desenvolvedores trabalhassem de maneira independente em partes distintas do projeto. Essa abordagem facilitou a colaboração e o gerenciamento de alterações, especialmente ao modularizar as funcionalidades em arquivos separados.
 
@@ -25,7 +59,7 @@ As responsabilidades ficaram distribuídas da seguinte forma:
 
 O trabalho foi realizado sem intercorrências, uma vez que cada desenvolvedor seguiu as orientações estabelecidas e contribuiu dentro de sua área de responsabilidade. Abaixo, apresentamos uma descrição detalhada das funcionalidades implementadas em cada função e arquivo.
 
-**Testes**
+ ### Testes
 
 Para testar os scripts, iremos testar uma cópia em que a pasta destino está vazia, uma cópia em que a pasta destino tem alguns dos arquivos da pasta source, uma cópia em que a pasta destino tem arquivos que não pertencem à pasta source e vamos testar uma cópia em que a pasta destino tem os mesmos arquivos da pasta source mas alguns foram modificados. Também iremos testar pastas com ficheiros escondidos e com espaços nos nomes. Nos scripts que tiverem parâmetros opcionais iremos testá-los com e sem esses parâmetros.
 Os teste apresentados neste relatório não representam a totalidade dos testes feitos, mas sim apenas os mais pertinentes de serem discutidos.
@@ -33,22 +67,23 @@ Os teste apresentados neste relatório não representam a totalidade dos testes 
 
 
 <div class="page-break"></div>
-<h1>Estruturas de dados</h1>
+
+## Estruturas de dados
 
 Nesta secção, vamos analisar as principais estruturas de dados utilizadas no script, que são fundamentais para o armazenamento e manipulação de informações durante o processo de backup. Veremos como arrays, variáveis inteiras e strings são usados para controlar a execução e otimizar a organização dos dados.
 
-**Arrays**
+### Arrays
 Os **arrays** são usados para armazenar listas de itens, como os arquivos a excluir ou os argumentos passados para o script.
-<h6>Uso:</h6>
+### Uso:
 <div class="code-block">
   <span class="array">exclude_list=()</span>  # <span class="comment">Array para armazenar arquivos a serem excluídos</span>
   <span class="array">args=($@)</span>        # <span class="comment">Array que contém os parâmetros passados para o script</span>
   <span class="array">lst=(${args[@]::${#args[@]}-1})</span>  # <span class="comment">Array contendo todos os elementos de args, exceto o último</span>
 </div>
 
-**Strings**
+### Strings
 No Bash são tratadas como arrays de caracteres e são usadas para armazenar sequências de texto. Foram usadas para armazenar dados como *paths* e *regex*.
-<h6>Uso:</h6>
+### Uso:
 <div class="code-block">
   <span class="variable">source_dir=""</span>  # <span class="comment">Caminho do diretório de origem</span><br>
   <span class="variable">backup_dir=""</span>  # <span class="comment">Caminho do diretório de backup</span><br>
@@ -59,11 +94,12 @@ No Bash são tratadas como arrays de caracteres e são usadas para armazenar seq
 
 
 <div class="page-break"></div>
-<h1>Como dividimos o problema (funções)</h1>
+
+## Como dividimos o problema (funções)
 
 <spam>O problema foi dividido de forma a torná-lo mais modular, visando a reutilização do código e facilitando a manutenção e a compreensão. Cada função desempenha um papel fundamental na execução do processo de backup. A seguir, iremos analisar as funções utilizadas e sua contribuição para a solução.</spam>
 
-<h6>findElement()</h6>  
+### findElement()  
 
 <spam>Esta função recebe 2 argumentos, um array e um valor a se procurar.</spam> 
 <div class="code-block">
@@ -90,7 +126,7 @@ No Bash são tratadas como arrays de caracteres e são usadas para armazenar seq
 </div>
 
 
-<h6>compModDate()</h6>
+### compModDate()
 
 <spam>Esta função recebe 2 caminhos para ficheiros e compara a última data de modificação. usando o comando "<b>-nt</b>".</spam> 
 
@@ -117,7 +153,7 @@ No Bash são tratadas como arrays de caracteres e são usadas para armazenar seq
 </div>
 
 
-<h6>copyFile()</h6>
+### copyFile()
 
 <spam>Esta função recebe um ficheiro ,um diretório para onde realizar a cópia e um valor <i><b>copy</b></i> que indica se a cópia deve ser realizada.</spam>
 <div class="code-block">
@@ -157,7 +193,7 @@ No Bash são tratadas como arrays de caracteres e são usadas para armazenar seq
 </pre>
 </div>
 
-<h6>usage()</h6>
+### usage()
 
 <spam>Exibe a mensagem de uso do script.</spam>
 <div class="code-block">
@@ -173,7 +209,7 @@ No Bash são tratadas como arrays de caracteres e são usadas para armazenar seq
 </pre>
 </div>
 
-<h6>nfound()</h6>
+### nfound()
 
 <spam>Exibe mensagem de erro se o diretório ou arquivo não for encontrado.</spam>
 <div class="code-block">
@@ -191,7 +227,72 @@ Execução:
 </pre>
 </div>
 
-<h6>end_print()</h6>
+### recursiveRemove()
+Esta função itera sobre todos of ficheiros o diretório de backup e ,caso não existam no diretório source, remove-os utilizando de chamadas recursivas a si mesmo ou de chamadas à função **recursiveRemoveHelper()**.
+
+<div class="code-block">
+<pre>
+Entrada:
+- main_dir #diretório source
+- other_dir #diretório para onde foi realizado o backup
+- checking #indica se deve mesmo remover os ficheiros ou só fazer echo da menssagem
+Saida:
+- quantidade de ficheiros removidos
+- tamanho total que foi removido
+.
+Execução:
+	Para cada arquivo do other_dir
+		Se o arquivo for um diretório: 
+			Se o diretório não existir em main_dir: 
+				Chame a função removeRecursiveHelper 
+				Exiba as remoções feitas
+				Adicione os valores de contagem e tamanho
+				Se checking for igual a 0
+					 Remova o diretório 
+				Exiba a remoção feita 
+			Caso contrário: 
+				Chame a função removeRecursive recursivamente 
+				Exiba as remoções feitas
+				Adicione os valores de contagem e tamanho
+		Se o arquivo for um arquivo regular (não diretório): 
+			Se o arquivo não existir em main_dir: 
+			Adicione o tamanho ao size 
+			Incrementa count
+			Se checking for igual a 0
+				 Remova o arquivo 
+			Exiba a remoção feita 
+	Retorne count e size como resultados
+</pre>
+</div>
+
+### recursiveRemoveHelper()
+<div class="code-block">
+<pre>
+Entrada:
+- dir
+- checking #indica se deve mesmo remover os ficheiros ou só fazer echo da menssagem
+Saida:
+- quantidade de ficheiros removidos
+- tamanho total que foi removido
+Execução:
+	Para cada item em dir: 
+		Se item for um diretório: 
+			Chama removeRecursiveHelper recursivamente
+			 Adicione os valores de contagem e tamanho
+			Se checking for igual a 0 
+				Remova o diretório 
+			Exiba a remoção feita 
+		Se item for um arquivo: 
+			Adicione o tamanho ao de dir_size 
+			Incrementa dir_count
+			Se checking for igual a 0: 
+				Remova o arquivo 
+			Exibe a remoção
+	Retorna dir_count e dir_size como resultados
+</pre>
+</div>
+
+### end_print()
 
 <spam>Exibe estatísticas do backup. É só usado no backup_summary.sh.</spam>
 <div class="code-block">
@@ -213,11 +314,12 @@ Execução:
 </div>
 
 <div class="page-break"></div>
-<h1>Ficheiros Principais</h1>
+
+## Ficheiros Principais
 
 Todos os scripts têm 2 argumentos obrigatórios, sendo o primeiro deles a diretoria que vai ser copiada e o segundo a diretoria para onde a cópia deverá ir.
 
-<h3>backup_files.sh</h3>
+### backup_files.sh
 O objetivo do código é realizar um backup de arquivos de um diretório de origem para um diretório de backup, podendo incluir a opção de verificar se os arquivos precisam ser copiados (modo de verificação) ou realmente realizar a cópia. Também garante que arquivos no diretório de backup que não existam mais no diretório de origem sejam removidos.
 Para além dos parametros obrigatórios o script tem um parametro opcional:
 -c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
@@ -332,7 +434,9 @@ fim para
 ![[ficheiroMaisNovoNaSrc.png]]
 
 <div class="page-break"></div>
-<h3>backup.sh</h3> O objetivo deste script é realizar um backup de arquivos e sub-diretórios de um diretório de origem para um diretório de backup, com opções de verificação, exclusão de arquivos, filtro por expressão regular. 
+
+### backup.sh 
+O objetivo deste script é realizar um backup de arquivos e sub-diretórios de um diretório de origem para um diretório de backup, com opções de verificação, exclusão de arquivos, filtro por expressão regular. 
  -c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
 
 -b [file], com este parametro o script irá ignorar os ficheiros cujo nome estão no ficheiro file
@@ -391,7 +495,6 @@ Fim para
 </div>
 
 <b>Testes</b>
-<u>Backup.sh</u>
 
 <small>Teste parametro -b</small>
 
@@ -416,7 +519,8 @@ Fim para
 <small>Todos os testes que foram feitos para o backup_files.sh também foram feitos para este script com algumas adaptações(assumindo já a existência de pastas e de ficheiros lá dentro incluindo pastas com espaços)</small>
 
 <div class="page-break"></div>
-<h3>backup_summary.sh</h3>
+
+### backup_summary.sh
 O objetivo deste script é realizar o backup de arquivos e subdiretórios de um diretório de origem para um diretório de backup, com opções de verificação, exclusão de arquivos, e a contagem e exibição de estatísticas detalhadas sobre o processo de backup.
  -c, com este parametro o script não irá efetuar a cópia dos ficheiros, apenas escrevendo no terminal as operações que faria, mas sem as executar
 
@@ -502,8 +606,6 @@ sizeDeleted=$((sizeDeleted + res[6]))
 </pre>
 </div>
 
-<div class="page-break"></div>
-
 <b>Testes</b>
 <small>Foram utilizados os mesmos testes que os do backup.sh devido à similaridade do código, acrescentando-se apenas alguns testes</small>
 
@@ -519,10 +621,11 @@ O resto dos arquivos será igual</small>
 ![[testeBackupSummaryPastasIguais.png]]
 
 <div class="page-break"></div>
-<h3>Backup_check.sh</h3>
+
+### Backup_check.sh
 O objetivo deste script é confirmar que os ficheiros que se encontram tanto na pasta destino tanto na pasta que irá ser copiada são iguais.
 
-<h3>Etapas</h3>
+### Etapas
 
 - Validar inputs do script
 <div class = "code-block">
@@ -572,7 +675,7 @@ se backup_dir existe e não está vazio, entao
 </pre>
 </div>
 
-<h3>Testes</h3>
+### Testes
 <small>Foi usada uma pasta com todos os ficheiros iguais menos 2, um na raiz e outro em uma subpasta</small>
 
 ![[testeBackupCheck.png]]
@@ -581,11 +684,12 @@ se backup_dir existe e não está vazio, entao
 <bdiv class="page-break"></b>
 ![[backup_checkMonstro.png]]
 <div class="page-break"></div>
-<h1>Como resolvemos certos problemas</h1>
+
+## Como resolvemos certos problemas
 
 Durante o desenvolvimento, surgiram alguns desafios que puderam ser superados através de pesquisas.
 
-<h6>Backup de ficheiros escondidos (.file)</h6>
+### Backup de ficheiros escondidos (.file)
 
 O bash por padrão só inclui no <i>globbing</i> os arquivos que não começam com ponto, logo os ficheiros escondidos não são normalmente incluidos em comandos como <i>ls</i>,... . Este desafio foi resolvido com uma simples linha de comando.
 
@@ -596,7 +700,7 @@ shopt -s dotglob <span class="comment"># Faz com que os ficheiros começados com
 </div>
 
 
-<h6>Verificar se o diretório destino estava dentro da source</h6>
+### Verificar se o diretório destino estava dentro da source
 
 Verificar se o diretório de destivo estava dentro da source é um passo importante para o <b>backup.sh</b> e <b>backup_summary.sh</b> visto que estes 2 utilizam recursividade para iterar sobre todos os diretórios da pasta source e caso o diretório destino estivesse dentro da source aconteceria um loop infinito.
 A função <b>realpath</b> do bash foi de grande ajuda para a solução que encontramos.
@@ -620,11 +724,11 @@ Se <b>backup_dir</b> é um subdiretório de <b>source_dir</b>:
 
 <b>[NOTA]</b> no backup_summary.sh o "Finalizar o processo" é feito atravez da função <b>end_print()</b>.
 
-<h6>Usar <i>realpath</i> para chamadas recursivas</h6>
+### Usar <i>realpath</i> para chamadas recursivas
 
 A solução que encontramos para este ponto foi justamente <b>não</b> usar o realpath em todas as chamadas recursivas. De facto pela forma como o código está estruturado o realpath só precisa ser utilizado na primeira chamada. Para controlar em qual chamada é que estavamos foi fácil, só foi preciso adicionar uma nova <b>flag ( opção )</b> no getopts que  assinala se uma chamada é recursiva ou não.
 
-<h6>Display dos passos efetuados na chamada recursiva</h6>
+### Display dos passos efetuados na chamada recursiva
 
 Ao fazer a chamada recursiva nós guardamos todos os outputs numa variável para termos um melhor controlo sobre os displays.
 
@@ -643,7 +747,7 @@ echo $output" | grep -E '^(cp|mkdir|rm|While)' <span class = "comment"># display
 ...
 </div>
 
-<h6>Summary das alterações no backup_summary.sh</h6>
+### Summary das alterações no backup_summary.sh
 
 A diferença entre o backup.sh e o backup_summary.sh é a disponibilização de informação à cerca das alterações realizadas pelo script. Para superar esta etapa a solução que encontramos foi de usar uma versão diferente das funções que são usadas no backup.sh.
 
@@ -688,7 +792,8 @@ sizeDeleted += res->sizeDeleted
 
 
 <div class="page-break"></div>
-<h1>Bibliografia</h1>
+
+## Bibliografia
 
 
 - Stack Overflow. (n.d.). _Stack Overflow: Where developers learn, share, & build careers_. Recuperado de [https://stackoverflow.com/](https://stackoverflow.com/)
